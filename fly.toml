@@ -1,5 +1,5 @@
 app = "fantasy-site-89f0"
-primary_region = "fra"
+primary_region = "ams"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
