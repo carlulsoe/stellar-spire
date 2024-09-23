@@ -213,6 +213,9 @@ function App() {
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>
+						<Button asChild variant="default" size="lg">
+							<Link to="/post-story">Post a Story</Link>
+						</Button>
 						<div className="flex items-center gap-10">
 							{user ? (
 								<UserDropdown />
