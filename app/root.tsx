@@ -232,6 +232,12 @@ function App() {
 
 				<div className="container flex justify-between pb-5">
 					<Logo />
+					<div className="flex flex-wrap justify-center gap-4 text-center text-sm text-muted-foreground">
+						<a href="/about" className="text-sm text-muted-foreground hover:underline">About</a>
+						<a href="/privacy" className="text-sm text-muted-foreground hover:underline">Privacy</a>
+						<a href="/support" className="text-sm text-muted-foreground hover:underline">Support</a>
+						<a href="/tos" className="text-sm text-muted-foreground hover:underline">Terms of Service</a>
+					</div>
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
 			</div>
@@ -245,10 +251,10 @@ function Logo() {
 	return (
 		<Link to="/" className="group grid leading-snug">
 			<span className="font-light transition group-hover:-translate-x-1">
-				epic
+				Stellar
 			</span>
 			<span className="font-bold transition group-hover:translate-x-1">
-				notes
+				Ink
 			</span>
 		</Link>
 	)

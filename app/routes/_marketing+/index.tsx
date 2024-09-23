@@ -54,6 +54,7 @@ export default function Index() {
 					>
 						<a href="https://www.epicweb.dev/stack">The Epic Stack</a>
 					</h1>
+
 					<p
 						data-paragraph
 						className="mt-6 animate-slide-top text-xl/7 text-muted-foreground [animation-delay:0.8s] [animation-fill-mode:backwards] xl:mt-8 xl:animate-slide-left xl:text-xl/6 xl:leading-10 xl:[animation-delay:1s] xl:[animation-fill-mode:backwards]"
@@ -96,6 +97,7 @@ export default function Index() {
 					</TooltipProvider>
 				</ul>
 			</div>
+
 		</main>
 	)
 }
