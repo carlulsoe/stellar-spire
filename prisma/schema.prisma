@@ -33,8 +33,9 @@ model Story {
   updatedAt DateTime  @updatedAt
   chapters  Chapter[]
   author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
+  likesCount Int       @default(0)
   @@index([authorId])
+  @@index([likesCount])
 }
 
 model Chapter {
