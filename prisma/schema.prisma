@@ -25,6 +25,54 @@ model User {
   roles       Role[]
   sessions    Session[]
   connections Connection[]
+  stories     Story[]
+  likes       Likes[]
+}
+
+model Story {
+  id      String @id @default(cuid())
+  title   String
+  content String
+  
+  author  User   @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  chapters Chapter[]
+
+  @@index([authorId])
+}
+
+model Chapter {
+  id      String @id @default(cuid())
+  title   String
+  content String
+
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  storyId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storyId])
+  likes       Likes[]
+  likesCount  Int      @default(0)
+}
+
+model Likes {
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  chapterId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([chapterId])
 }
 
 model Note {
