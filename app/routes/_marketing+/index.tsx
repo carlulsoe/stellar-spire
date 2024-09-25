@@ -11,13 +11,56 @@ import {
 } from '#app/components/ui/card.tsx'
 import { prisma } from '#app/utils/db.server.ts'
 
-
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 
 export async function loader({ params }: LoaderFunctionArgs) {
-	// Get the 4 most recommended stories for this user. We determine the recommendation by using collaborative filtering.
+	// Assume we have a way to get the current user's ID from the request
+	const userId = params.userId
 
+	// Fetch the current user's interactions and similar users
+	const userWithInteractions = await prisma.user.findUnique({
+		where: { id: userId },
+		include: {
+			storyInteractions: {
+				where: { type: { in: ['like', 'rate'] } },
+				include: { story: true },
+			},
+			similaritiesAsUser2: {
+				orderBy: { similarity: 'desc' },
+				take: 10,
+				include: {
+					user1: {
+						include: {
+							storyInteractions: {
+								where: { type: { in: ['like', 'rate'] } },
+								include: { story: true },
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+
+	invariantResponse(userWithInteractions, 'User not found', { status: 404 })
+
+	// Calculate recommendations based on similar users' interactions
+	const recommendedStoryIds = new Set<string>()
+	const userInteractedStoryIds = new Set(userWithInteractions.storyInteractions.map(i => i.story.id))
+
+	for (const similarity of userWithInteractions.similaritiesAsUser2) {
+		for (const interaction of similarity.user1.storyInteractions) {
+			if (!userInteractedStoryIds.has(interaction.story.id)) {
+				recommendedStoryIds.add(interaction.story.id)
+			}
+			if (recommendedStoryIds.size >= 4) break
+		}
+		if (recommendedStoryIds.size >= 4) break
+	}
+
+	// Fetch full details of recommended stories
 	const recommendedStories = await prisma.story.findMany({
+		where: { id: { in: Array.from(recommendedStoryIds) } },
 		select: {
 			id: true,
 			title: true,
@@ -31,10 +74,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 				},
 			},
 		},
-		orderBy: {
-			likesCount: 'desc',
-		},
-		take: 4,
 	})
 
 	invariantResponse(recommendedStories, 'Recommended stories not found', { status: 404 })
@@ -60,7 +99,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	})
 
 	invariantResponse(popularStories, 'Popular stories not found', { status: 404 })
-
 
 	return json({ recommendedStories, popularStories })
 }
