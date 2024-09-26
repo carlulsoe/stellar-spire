@@ -103,13 +103,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 	invariantResponse(popularStories, 'Popular stories not found', { status: 404 })
 
-	return json({ recommendedStories, popularStories })
+	// Should show 4 recently updated stories
+	const recentlyUpdatedStories = await prisma.story.findMany({
+		select: {
+			id: true,
+			title: true,
+			content: true,
+			createdAt: true,
+			author: { select: { id: true, name: true, username: true } },
+		},
+		orderBy: { createdAt: 'desc' },
+		take: 4,
+	})
+
+	invariantResponse(recentlyUpdatedStories, 'Recently updated stories not found', { status: 404 })
+
+	return json({ recommendedStories, popularStories, recentlyUpdatedStories })
 }
 
 export default function Index() {
 	const data = useLoaderData<typeof loader>()
 	const recommendedStories = data.recommendedStories;
 	const popularStories = data.popularStories;
+	const recentlyUpdatedStories = data.recentlyUpdatedStories;
 	return (
 		<main className="font-poppins grid h-full place-items-center">
 			{recommendedStories.length > 0 && (
@@ -137,6 +153,25 @@ export default function Index() {
 				<h2 className="text-2xl font-bold mb-4">Popular Stories</h2>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
 					{popularStories.map((story) => (
+						<Card key={story.id} className="w-[320px]">
+							<CardHeader>
+								<CardTitle>{story.title}</CardTitle>
+								<CardDescription>{story.author.name}</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<p className="text-sm mb-4">{story.content}</p>
+							</CardContent>
+							<CardFooter>
+								<a href="#" className="text-blue-500 hover:underline">Read more</a>
+							</CardFooter>
+						</Card>
+					))}
+				</div>
+			</div>
+			<div className="container mx-auto px-4 mt-8 mb-8">
+				<h2 className="text-2xl font-bold mb-4">Recently Updated Stories</h2>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+					{recentlyUpdatedStories.map((story) => (
 						<Card key={story.id} className="w-[320px]">
 							<CardHeader>
 								<CardTitle>{story.title}</CardTitle>
