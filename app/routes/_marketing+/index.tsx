@@ -1,5 +1,9 @@
 import { invariantResponse } from '@epic-web/invariant'
-import { type MetaFunction, json, type LoaderFunctionArgs } from '@remix-run/node'
+import {
+	type MetaFunction,
+	json,
+	type LoaderFunctionArgs,
+} from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import {
 	Card,
@@ -9,12 +13,19 @@ import {
 	CardHeader,
 	CardTitle,
 } from '#app/components/ui/card.tsx'
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from '#app/components/ui/carousel.tsx'
 import { getUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.ts'
 
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 async function getRecommendedStories(userId: string) {
-	invariantResponse(userId, 'User ID is required', { status: 400 })	
+	invariantResponse(userId, 'User ID is required', { status: 400 })
 	const userWithInteractions = await prisma.user.findUnique({
 		where: { id: userId },
 		include: {
@@ -43,7 +54,9 @@ async function getRecommendedStories(userId: string) {
 
 	// Calculate recommendations based on similar users' interactions
 	const recommendedStoryIds = new Set<string>()
-	const userInteractedStoryIds = new Set(userWithInteractions.storyInteractions.map(i => i.story.id))
+	const userInteractedStoryIds = new Set(
+		userWithInteractions.storyInteractions.map((i) => i.story.id),
+	)
 
 	for (const similarity of userWithInteractions.similaritiesAsUser2) {
 		for (const interaction of similarity.user1.storyInteractions) {
@@ -79,7 +92,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await getUserId(request)
 	const recommendedStories = userId ? await getRecommendedStories(userId) : []
 
-	invariantResponse(recommendedStories, 'Recommended stories not found', { status: 404 })
+	invariantResponse(recommendedStories, 'Recommended stories not found', {
+		status: 404,
+	})
 	// We only want to show the 4 most popular stories
 	const popularStories = await prisma.story.findMany({
 		select: {
@@ -101,7 +116,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		take: 4,
 	})
 
-	invariantResponse(popularStories, 'Popular stories not found', { status: 404 })
+	invariantResponse(popularStories, 'Popular stories not found', {
+		status: 404,
+	})
 
 	// Should show 4 recently updated stories
 	const recentlyUpdatedStories = await prisma.story.findMany({
@@ -116,42 +133,64 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		take: 4,
 	})
 
-	invariantResponse(recentlyUpdatedStories, 'Recently updated stories not found', { status: 404 })
+	invariantResponse(
+		recentlyUpdatedStories,
+		'Recently updated stories not found',
+		{ status: 404 },
+	)
 
 	return json({ recommendedStories, popularStories, recentlyUpdatedStories })
 }
 
 export default function Index() {
 	const data = useLoaderData<typeof loader>()
-	const recommendedStories = data.recommendedStories;
-	const popularStories = data.popularStories;
-	const recentlyUpdatedStories = data.recentlyUpdatedStories;
+	const recommendedStories = data.recommendedStories
+	const popularStories = data.popularStories
+	const recentlyUpdatedStories = data.recentlyUpdatedStories
 	return (
 		<main className="font-poppins grid h-full place-items-center">
 			{recommendedStories.length > 0 && (
-				<div className="container mx-auto px-4">
-					<h2 className="text-2xl font-bold mb-4">Recommended Stories</h2>
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-						{recommendedStories.map((story) => (
-							<Card key={story.id} className="w-[320px]">
-								<CardHeader>
-									<CardTitle>{story.title}</CardTitle>
-									<CardDescription>{story.author.name}</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<p className="text-sm mb-4">{story.content}</p>
-								</CardContent>
-								<CardFooter>
-									<a href="#" className="text-blue-500 hover:underline">Read more</a>
-								</CardFooter>
-							</Card>
-						))}
-					</div>
-				</div>
+				<>
+					<h2 className="mb-4 text-2xl font-bold">Recommended Stories</h2>
+					<Carousel
+						opts={{
+							align: 'start',
+						}}
+						className="w-full max-w-sm"
+					>
+						<CarouselContent>
+							{recommendedStories.map((story) => (
+								<CarouselItem
+									key={story.id}
+									className="md:basis-1/2 lg:basis-1/3"
+								>
+									<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+										<Card key={story.id} className="w-[320px]">
+											<CardHeader>
+												<CardTitle>{story.title}</CardTitle>
+												<CardDescription>{story.author.name}</CardDescription>
+											</CardHeader>
+											<CardContent>
+												<p className="mb-4 text-sm">{story.content}</p>
+											</CardContent>
+											<CardFooter>
+												<a href="#" className="text-blue-500 hover:underline">
+													Read more
+												</a>
+											</CardFooter>
+										</Card>
+									</div>
+								</CarouselItem>
+							))}
+						</CarouselContent>
+						<CarouselPrevious />
+						<CarouselNext />
+					</Carousel>
+				</>
 			)}
-			<div className="container mx-auto px-4 mt-8 mb-8">
-				<h2 className="text-2xl font-bold mb-4">Popular Stories</h2>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+			<div className="container mx-auto mb-8 mt-8 px-4">
+				<h2 className="mb-4 text-2xl font-bold">Popular Stories</h2>
+				<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 					{popularStories.map((story) => (
 						<Card key={story.id} className="w-[320px]">
 							<CardHeader>
@@ -159,18 +198,20 @@ export default function Index() {
 								<CardDescription>{story.author.name}</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<p className="text-sm mb-4">{story.content}</p>
+								<p className="mb-4 text-sm">{story.content}</p>
 							</CardContent>
 							<CardFooter>
-								<a href="#" className="text-blue-500 hover:underline">Read more</a>
+								<a href="#" className="text-blue-500 hover:underline">
+									Read more
+								</a>
 							</CardFooter>
 						</Card>
 					))}
 				</div>
 			</div>
-			<div className="container mx-auto px-4 mt-8 mb-8">
-				<h2 className="text-2xl font-bold mb-4">Recently Updated Stories</h2>
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+			<div className="container mx-auto mb-8 mt-8 px-4">
+				<h2 className="mb-4 text-2xl font-bold">Recently Updated Stories</h2>
+				<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 					{recentlyUpdatedStories.map((story) => (
 						<Card key={story.id} className="w-[320px]">
 							<CardHeader>
@@ -178,10 +219,12 @@ export default function Index() {
 								<CardDescription>{story.author.name}</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<p className="text-sm mb-4">{story.content}</p>
+								<p className="mb-4 text-sm">{story.content}</p>
 							</CardContent>
 							<CardFooter>
-								<a href="#" className="text-blue-500 hover:underline">Read more</a>
+								<a href="#" className="text-blue-500 hover:underline">
+									Read more
+								</a>
 							</CardFooter>
 						</Card>
 					))}

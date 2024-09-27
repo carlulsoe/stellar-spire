@@ -1,6 +1,7 @@
 # Stellar ink
 
-This is going to be the best place to read fiction and the best place to post fiction online.
+This is going to be the best place to read fiction and the best place to post
+fiction online.
 
 ## Docs
 
@@ -13,4 +14,3 @@ This is going to be the best place to read fiction and the best place to post fi
 - add a way to read a story
 - add basic recommendations
 - update search functionallity to include stories.
-
