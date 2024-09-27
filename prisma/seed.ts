@@ -6,7 +6,7 @@ import {
 	cleanupDb,
 	createPassword,
 	createUser,
-	getNoteImages,
+	getStoryImages,
 	getUserImages,
 	img,
 } from '#tests/db-utils.ts'
@@ -63,7 +63,7 @@ async function seed() {
 
 	const totalUsers = 5
 	console.time(`👤 Created ${totalUsers} users...`)
-	const noteImages = await getNoteImages()
+	const storyImages = await getStoryImages()
 	const userImages = await getUserImages()
 
 	for (let index = 0; index < totalUsers; index++) {
@@ -87,7 +87,7 @@ async function seed() {
 									length: faker.number.int({ min: 1, max: 3 }),
 								}).map(() => {
 									const imgNumber = faker.number.int({ min: 0, max: 9 })
-									const img = noteImages[imgNumber]
+									const img = storyImages[imgNumber]
 									if (!img) {
 										throw new Error(`Could not find image #${imgNumber}`)
 									}
