@@ -8,7 +8,7 @@ import {
 	type FieldMetadata,
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { type Note, type NoteImage } from '@prisma/client'
+import { type Story, type StoryImage } from '@prisma/client'
 import { type SerializeFrom } from '@remix-run/node'
 import { Form, useActionData } from '@remix-run/react'
 import { useState } from 'react'
@@ -22,7 +22,7 @@ import { Label } from '#app/components/ui/label.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { Textarea } from '#app/components/ui/textarea.tsx'
 import { cn, getNoteImgSrc, useIsPending } from '#app/utils/misc.tsx'
-import { type action } from './__note-editor.server'
+import { type action } from './__story-editor.server'
 
 const titleMinLength = 1
 const titleMaxLength = 100
@@ -44,19 +44,19 @@ const ImageFieldsetSchema = z.object({
 
 export type ImageFieldset = z.infer<typeof ImageFieldsetSchema>
 
-export const NoteEditorSchema = z.object({
+export const StoryEditorSchema = z.object({
 	id: z.string().optional(),
 	title: z.string().min(titleMinLength).max(titleMaxLength),
-	content: z.string().min(contentMinLength).max(contentMaxLength),
+	description: z.string().min(contentMinLength).max(contentMaxLength),
 	images: z.array(ImageFieldsetSchema).max(5).optional(),
 })
 
-export function NoteEditor({
-	note,
+export function StoryEditor({
+	story,
 }: {
-	note?: SerializeFrom<
-		Pick<Note, 'id' | 'title' | 'content'> & {
-			images: Array<Pick<NoteImage, 'id' | 'altText'>>
+	story?: SerializeFrom<
+		Pick<Story, 'id' | 'title' | 'description'> & {
+			images: Array<Pick<StoryImage, 'id' | 'altText'>>
 		}
 	>
 }) {
@@ -64,15 +64,15 @@ export function NoteEditor({
 	const isPending = useIsPending()
 
 	const [form, fields] = useForm({
-		id: 'note-editor',
-		constraint: getZodConstraint(NoteEditorSchema),
+		id: 'story-editor',
+		constraint: getZodConstraint(StoryEditorSchema),
 		lastResult: actionData?.result,
 		onValidate({ formData }) {
-			return parseWithZod(formData, { schema: NoteEditorSchema })
+			return parseWithZod(formData, { schema: StoryEditorSchema })
 		},
 		defaultValue: {
-			...note,
-			images: note?.images ?? [{}],
+			...story,
+			images: story?.images ?? [{}],
 		},
 		shouldRevalidate: 'onBlur',
 	})
@@ -93,7 +93,7 @@ export function NoteEditor({
 					rather than the first button in the form (which is delete/add image).
 				*/}
 					<button type="submit" className="hidden" />
-					{note ? <input type="hidden" name="id" value={note.id} /> : null}
+					{story ? <input type="hidden" name="id" value={story.id} /> : null}
 					<div className="flex flex-col gap-1">
 						<Field
 							labelProps={{ children: 'Title' }}
@@ -104,11 +104,11 @@ export function NoteEditor({
 							errors={fields.title.errors}
 						/>
 						<TextareaField
-							labelProps={{ children: 'Content' }}
+							labelProps={{ children: 'Description' }}
 							textareaProps={{
-								...getTextareaProps(fields.content),
+								...getTextareaProps(fields.description),
 							}}
-							errors={fields.content.errors}
+							errors={fields.description.errors}
 						/>
 						<div>
 							<Label>Images</Label>

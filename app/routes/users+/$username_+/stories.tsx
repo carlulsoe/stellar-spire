@@ -8,27 +8,27 @@ import { cn, getUserImgSrc } from '#app/utils/misc.tsx'
 import { useOptionalUser } from '#app/utils/user.ts'
 
 export async function loader({ params }: LoaderFunctionArgs) {
-	const owner = await prisma.user.findFirst({
+	const author = await prisma.user.findFirst({
 		select: {
 			id: true,
 			name: true,
 			username: true,
 			image: { select: { id: true } },
-			notes: { select: { id: true, title: true } },
+			stories: { select: { id: true, title: true } },
 		},
 		where: { username: params.username },
 	})
 
-	invariantResponse(owner, 'Owner not found', { status: 404 })
+	invariantResponse(author, 'Author not found', { status: 404 })
 
-	return json({ owner })
+	return json({ author })
 }
 
-export default function NotesRoute() {
+export default function StoriesRoute() {
 	const data = useLoaderData<typeof loader>()
 	const user = useOptionalUser()
-	const isOwner = user?.id === data.owner.id
-	const ownerDisplayName = data.owner.name ?? data.owner.username
+	const isAuthor = user?.id === data.author.id
+	const authorDisplayName = data.author.name ?? data.author.username
 	const navLinkDefaultClassName =
 		'line-clamp-2 block rounded-l-full py-2 pl-8 pr-6 text-base lg:text-xl'
 	return (
@@ -37,20 +37,20 @@ export default function NotesRoute() {
 				<div className="relative col-span-1">
 					<div className="absolute inset-0 flex flex-col">
 						<Link
-							to={`/users/${data.owner.username}`}
+							to={`/users/${data.author.username}`}
 							className="flex flex-col items-center justify-center gap-2 bg-muted pb-4 pl-8 pr-4 pt-12 lg:flex-row lg:justify-start lg:gap-4"
 						>
 							<img
-								src={getUserImgSrc(data.owner.image?.id)}
-								alt={ownerDisplayName}
+								src={getUserImgSrc(data.author.image?.id)}
+								alt={authorDisplayName}
 								className="h-16 w-16 rounded-full object-cover lg:h-24 lg:w-24"
 							/>
 							<h1 className="text-center text-base font-bold md:text-lg lg:text-left lg:text-2xl">
-								{ownerDisplayName}'s Notes
+								{authorDisplayName}'s Stories
 							</h1>
 						</Link>
 						<ul className="overflow-y-auto overflow-x-hidden pb-12">
-							{isOwner ? (
+							{isAuthor ? (
 								<li className="p-1 pr-0">
 									<NavLink
 										to="new"
@@ -58,21 +58,21 @@ export default function NotesRoute() {
 											cn(navLinkDefaultClassName, isActive && 'bg-accent')
 										}
 									>
-										<Icon name="plus">New Note</Icon>
+										<Icon name="plus">New Story</Icon>
 									</NavLink>
 								</li>
 							) : null}
-							{data.owner.notes.map((note) => (
-								<li key={note.id} className="p-1 pr-0">
+							{data.author.stories.map((story) => (
+								<li key={story.id} className="p-1 pr-0">
 									<NavLink
-										to={note.id}
+										to={story.id}
 										preventScrollReset
 										prefetch="intent"
 										className={({ isActive }) =>
 											cn(navLinkDefaultClassName, isActive && 'bg-accent')
 										}
 									>
-										{note.title}
+										{story.title}
 									</NavLink>
 								</li>
 							))}

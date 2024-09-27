@@ -74,7 +74,7 @@ async function getRecommendedStories(userId: string) {
 		select: {
 			id: true,
 			title: true,
-			content: true,
+			description: true,
 			createdAt: true,
 			author: {
 				select: {
@@ -100,7 +100,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		select: {
 			id: true,
 			title: true,
-			content: true,
+			description: true,
 			createdAt: true,
 			author: {
 				select: {
@@ -125,7 +125,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		select: {
 			id: true,
 			title: true,
-			content: true,
+			description: true,
 			createdAt: true,
 			author: { select: { id: true, name: true, username: true } },
 		},
@@ -171,7 +171,7 @@ export default function Index() {
 												<CardDescription>{story.author.name}</CardDescription>
 											</CardHeader>
 											<CardContent>
-												<p className="mb-4 text-sm">{story.content}</p>
+												<p className="mb-4 text-sm">{story.description}</p>
 											</CardContent>
 											<CardFooter>
 												<a href="#" className="text-blue-500 hover:underline">
@@ -198,7 +198,7 @@ export default function Index() {
 								<CardDescription>{story.author.name}</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<p className="mb-4 text-sm">{story.content}</p>
+								<p className="mb-4 text-sm">{story.description}</p>
 							</CardContent>
 							<CardFooter>
 								<a href="#" className="text-blue-500 hover:underline">
@@ -219,7 +219,7 @@ export default function Index() {
 								<CardDescription>{story.author.name}</CardDescription>
 							</CardHeader>
 							<CardContent>
-								<p className="mb-4 text-sm">{story.content}</p>
+								<p className="mb-4 text-sm">{story.description}</p>
 							</CardContent>
 							<CardFooter>
 								<a href="#" className="text-blue-500 hover:underline">

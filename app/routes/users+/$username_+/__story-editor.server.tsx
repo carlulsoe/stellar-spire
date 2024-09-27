@@ -12,9 +12,9 @@ import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import {
 	MAX_UPLOAD_SIZE,
-	NoteEditorSchema,
+	StoryEditorSchema,
 	type ImageFieldset,
-} from './__note-editor'
+} from './__story-editor'
 
 function imageHasFile(
 	image: ImageFieldset,
@@ -37,17 +37,17 @@ export async function action({ request }: ActionFunctionArgs) {
 	)
 
 	const submission = await parseWithZod(formData, {
-		schema: NoteEditorSchema.superRefine(async (data, ctx) => {
+		schema: StoryEditorSchema.superRefine(async (data, ctx) => {
 			if (!data.id) return
 
-			const note = await prisma.note.findUnique({
+			const story = await prisma.story.findUnique({
 				select: { id: true },
-				where: { id: data.id, ownerId: userId },
+				where: { id: data.id, authorId: userId },
 			})
-			if (!note) {
+			if (!story) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: 'Note not found',
+					message: 'Story not found',
 				})
 			}
 		}).transform(async ({ images = [], ...data }) => {
@@ -95,25 +95,25 @@ export async function action({ request }: ActionFunctionArgs) {
 	}
 
 	const {
-		id: noteId,
+		id: storyId,
 		title,
-		content,
+		description,
 		imageUpdates = [],
 		newImages = [],
 	} = submission.value
 
-	const updatedNote = await prisma.note.upsert({
-		select: { id: true, owner: { select: { username: true } } },
-		where: { id: noteId ?? '__new_note__' },
+	const updatedStory = await prisma.story.upsert({
+		select: { id: true, author: { select: { username: true } } },
+		where: { id: storyId ?? '__new_story__' },
 		create: {
-			ownerId: userId,
+			authorId: userId,
 			title,
-			content,
+			description,
 			images: { create: newImages },
 		},
 		update: {
 			title,
-			content,
+			description,
 			images: {
 				deleteMany: { id: { notIn: imageUpdates.map((i) => i.id) } },
 				updateMany: imageUpdates.map((updates) => ({
@@ -126,6 +126,6 @@ export async function action({ request }: ActionFunctionArgs) {
 	})
 
 	return redirect(
-		`/users/${updatedNote.owner.username}/notes/${updatedNote.id}`,
+		`/users/${updatedStory.author.username}/stories/${updatedStory.id}`,
 	)
 }

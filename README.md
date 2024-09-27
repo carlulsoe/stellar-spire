@@ -12,5 +12,5 @@ fiction online.
 
 - add a way to upload a story
 - add a way to read a story
-- add basic recommendations
+- add basic recommendations (DONE)
 - update search functionallity to include stories.

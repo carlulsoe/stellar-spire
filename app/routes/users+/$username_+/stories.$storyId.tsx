@@ -27,16 +27,16 @@ import { getNoteImgSrc, useIsPending } from '#app/utils/misc.tsx'
 import { requireUserWithPermission } from '#app/utils/permissions.server.ts'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
-import { type loader as notesLoader } from './notes.tsx'
+import { type loader as storiesLoader } from './stories.tsx'
 
 export async function loader({ params }: LoaderFunctionArgs) {
-	const note = await prisma.note.findUnique({
-		where: { id: params.noteId },
+	const story = await prisma.story.findUnique({
+		where: { id: params.storyId },
 		select: {
 			id: true,
 			title: true,
-			content: true,
-			ownerId: true,
+			description: true,
+			authorId: true,
 			updatedAt: true,
 			images: {
 				select: {
@@ -47,20 +47,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		},
 	})
 
-	invariantResponse(note, 'Not found', { status: 404 })
+	invariantResponse(story, 'Not found', { status: 404 })
 
-	const date = new Date(note.updatedAt)
+	const date = new Date(story.updatedAt)
 	const timeAgo = formatDistanceToNow(date)
 
 	return json({
-		note,
+		story,
 		timeAgo,
 	})
 }
 
 const DeleteFormSchema = z.object({
-	intent: z.literal('delete-note'),
-	noteId: z.string(),
+	intent: z.literal('delete-story'),
+	storyId: z.string(),
 })
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -76,45 +76,45 @@ export async function action({ request }: ActionFunctionArgs) {
 		)
 	}
 
-	const { noteId } = submission.value
+	const { storyId } = submission.value
 
-	const note = await prisma.note.findFirst({
-		select: { id: true, ownerId: true, owner: { select: { username: true } } },
-		where: { id: noteId },
+	const story = await prisma.story.findFirst({
+		select: { id: true, authorId: true, author: { select: { username: true } } },
+		where: { id: storyId },
 	})
-	invariantResponse(note, 'Not found', { status: 404 })
+	invariantResponse(story, 'Not found', { status: 404 })
 
-	const isOwner = note.ownerId === userId
+	const isAuthor = story.authorId === userId
 	await requireUserWithPermission(
 		request,
-		isOwner ? `delete:note:own` : `delete:note:any`,
+		isAuthor ? `delete:story:own` : `delete:story:any`,
 	)
 
-	await prisma.note.delete({ where: { id: note.id } })
+	await prisma.story.delete({ where: { id: story.id } })
 
-	return redirectWithToast(`/users/${note.owner.username}/notes`, {
+	return redirectWithToast(`/users/${story.author.username}/stories`, {
 		type: 'success',
 		title: 'Success',
-		description: 'Your note has been deleted.',
+		description: 'Your story has been deleted.',
 	})
 }
 
-export default function NoteRoute() {
+export default function StoryRoute() {
 	const data = useLoaderData<typeof loader>()
 	const user = useOptionalUser()
-	const isOwner = user?.id === data.note.ownerId
+	const isAuthor = user?.id === data.story.authorId
 	const canDelete = userHasPermission(
 		user,
-		isOwner ? `delete:note:own` : `delete:note:any`,
+		isAuthor ? `delete:story:own` : `delete:story:any`,
 	)
-	const displayBar = canDelete || isOwner
+	const displayBar = canDelete || isAuthor
 
 	return (
 		<div className="absolute inset-0 flex flex-col px-10">
-			<h2 className="mb-2 pt-12 text-h2 lg:mb-6">{data.note.title}</h2>
+			<h2 className="mb-2 pt-12 text-h2 lg:mb-6">{data.story.title}</h2>
 			<div className={`${displayBar ? 'pb-24' : 'pb-12'} overflow-y-auto`}>
 				<ul className="flex flex-wrap gap-5 py-5">
-					{data.note.images.map((image) => (
+					{data.story.images.map((image) => (
 						<li key={image.id}>
 							<a href={getNoteImgSrc(image.id)}>
 								<img
@@ -127,7 +127,7 @@ export default function NoteRoute() {
 					))}
 				</ul>
 				<p className="whitespace-break-spaces text-sm md:text-lg">
-					{data.note.content}
+					{data.story.description}
 				</p>
 			</div>
 			{displayBar ? (
@@ -138,7 +138,7 @@ export default function NoteRoute() {
 						</Icon>
 					</span>
 					<div className="grid flex-1 grid-cols-2 justify-end gap-2 min-[525px]:flex md:gap-4">
-						{canDelete ? <DeleteNote id={data.note.id} /> : null}
+						{canDelete ? <DeleteStory id={data.story.id} /> : null}
 						<Button
 							asChild
 							className="min-[525px]:max-md:aspect-square min-[525px]:max-md:px-0"
@@ -156,21 +156,21 @@ export default function NoteRoute() {
 	)
 }
 
-export function DeleteNote({ id }: { id: string }) {
+export function DeleteStory({ id }: { id: string }) {
 	const actionData = useActionData<typeof action>()
 	const isPending = useIsPending()
 	const [form] = useForm({
-		id: 'delete-note',
+		id: 'delete-story',
 		lastResult: actionData?.result,
 	})
 
 	return (
 		<Form method="POST" {...getFormProps(form)}>
-			<input type="hidden" name="noteId" value={id} />
+			<input type="hidden" name="storyId" value={id} />
 			<StatusButton
 				type="submit"
 				name="intent"
-				value="delete-note"
+				value="delete-story"
 				variant="destructive"
 				status={isPending ? 'pending' : (form.status ?? 'idle')}
 				disabled={isPending}
@@ -187,22 +187,22 @@ export function DeleteNote({ id }: { id: string }) {
 
 export const meta: MetaFunction<
 	typeof loader,
-	{ 'routes/users+/$username_+/notes': typeof notesLoader }
+	{ 'routes/users+/$username_+/stories': typeof storiesLoader }
 > = ({ data, params, matches }) => {
-	const notesMatch = matches.find(
-		(m) => m.id === 'routes/users+/$username_+/notes',
+	const storiesMatch = matches.find(
+		(m) => m.id === 'routes/users+/$username_+/stories',
 	)
-	const displayName = notesMatch?.data?.owner.name ?? params.username
-	const noteTitle = data?.note.title ?? 'Note'
-	const noteContentsSummary =
-		data && data.note.content.length > 100
-			? data?.note.content.slice(0, 97) + '...'
+	const displayName = storiesMatch?.data?.author.name ?? params.username
+	const storyTitle = data?.story.title ?? 'Story'
+	const storyDescription =
+		data && data.story.description.length > 100
+			? data?.story.description.slice(0, 97) + '...'
 			: 'No content'
 	return [
-		{ title: `${noteTitle} | ${displayName}'s Notes | Epic Notes` },
+		{ title: `${storyTitle} | ${displayName}'s Stories | Stellar Ink` },
 		{
 			name: 'description',
-			content: noteContentsSummary,
+			content: storyDescription,
 		},
 	]
 }
@@ -213,7 +213,7 @@ export function ErrorBoundary() {
 			statusHandlers={{
 				403: () => <p>You are not allowed to do that</p>,
 				404: ({ params }) => (
-					<p>No note with the id "{params.noteId}" exists</p>
+					<p>No story with the id "{params.storyId}" exists</p>
 				),
 			}}
 		/>

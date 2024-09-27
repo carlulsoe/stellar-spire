@@ -72,7 +72,7 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
-		{ title: data ? 'Epic Notes' : 'Error | Epic Notes' },
+		{ title: data ? 'Stellar Ink' : 'Error | Stellar Ink' },
 		{ name: 'description', content: `Your own captain's log` },
 	]
 }
@@ -214,7 +214,13 @@ function App() {
 							{searchBar}
 						</div>
 						<Button asChild variant="default" size="lg">
-							<Link to="/post-story">Post a Story</Link>
+							{user ? (
+								<Link to={`/users/${user.username}/stories`}>
+									Post a Story
+								</Link>
+							) : (
+								<></>
+							)}
 						</Button>
 						<div className="flex items-center gap-10">
 							{user ? (
@@ -329,9 +335,9 @@ function UserDropdown() {
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
-						<Link prefetch="intent" to={`/users/${user.username}/notes`}>
+						<Link prefetch="intent" to={`/users/${user.username}/stories`}>
 							<Icon className="text-body-md" name="pencil-2">
-								Notes
+								Stories
 							</Icon>
 						</Link>
 					</DropdownMenuItem>
