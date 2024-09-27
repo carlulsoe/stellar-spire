@@ -10,7 +10,7 @@ test('Users can add 2FA to their account and use it when logging in', async ({
 	const user = await login({ password })
 	await page.goto('/settings/profile')
 
-	await page.getByRole('link', { name: /enable 2fa/i }).click()
+	await page.getByRole('link', { name: /enable 2FA/i }).click()
 
 	await expect(page).toHaveURL(`/settings/profile/two-factor`)
 	const main = page.getByRole('main')
