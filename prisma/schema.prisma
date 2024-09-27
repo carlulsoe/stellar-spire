@@ -16,7 +16,6 @@ model User {
   updatedAt   DateTime     @updatedAt
   connections Connection[]
   likes       Likes[]
-  notes       Note[]
   password    Password?
   sessions    Session[]
   stories     Story[]
@@ -101,33 +100,6 @@ model Likes {
 
   @@index([userId])
   @@index([chapterId])
-}
-
-model Note {
-  id        String      @id @default(cuid())
-  title     String
-  content   String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  ownerId   String
-  owner     User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  images    NoteImage[]
-
-  @@index([ownerId])
-  @@index([ownerId, updatedAt])
-}
-
-model NoteImage {
-  id          String   @id @default(cuid())
-  altText     String?
-  contentType String
-  blob        Bytes
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  noteId      String
-  note        Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
-
-  @@index([noteId])
 }
 
 model StoryImage {
