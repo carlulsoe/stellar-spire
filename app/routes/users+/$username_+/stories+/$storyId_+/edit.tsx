@@ -4,9 +4,9 @@ import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
-import { StoryEditor } from './__story-editor.tsx'
+import { StoryEditor } from '../../__story-editor.tsx'
 
-export { action } from './__story-editor.server.tsx'
+export { action } from '../../__story-editor.server.tsx'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
 	const userId = await requireUserId(request)

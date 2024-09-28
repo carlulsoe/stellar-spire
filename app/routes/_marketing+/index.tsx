@@ -174,7 +174,10 @@ export default function Index() {
 												<p className="mb-4 text-sm">{story.description}</p>
 											</CardContent>
 											<CardFooter>
-												<a href="#" className="text-blue-500 hover:underline">
+												<a
+													href={`/users/${story.author.username}/stories/${story.id}`}
+													className="text-blue-500 hover:underline"
+												>
 													Read more
 												</a>
 											</CardFooter>
@@ -201,7 +204,10 @@ export default function Index() {
 								<p className="mb-4 text-sm">{story.description}</p>
 							</CardContent>
 							<CardFooter>
-								<a href="#" className="text-blue-500 hover:underline">
+								<a
+									href={`/users/${story.author.username}/stories/${story.id}`}
+									className="text-blue-500 hover:underline"
+								>
 									Read more
 								</a>
 							</CardFooter>
@@ -222,7 +228,10 @@ export default function Index() {
 								<p className="mb-4 text-sm">{story.description}</p>
 							</CardContent>
 							<CardFooter>
-								<a href="#" className="text-blue-500 hover:underline">
+								<a
+									href={`/users/${story.author.username}/stories/${story.id}`}
+									className="text-blue-500 hover:underline"
+								>
 									Read more
 								</a>
 							</CardFooter>

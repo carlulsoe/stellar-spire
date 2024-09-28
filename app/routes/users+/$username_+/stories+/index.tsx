@@ -1,5 +1,5 @@
 import { type MetaFunction } from '@remix-run/react'
-import { type loader as storiesLoader } from './stories.tsx'
+import { type loader as storiesLoader } from '../stories.tsx'
 
 export default function StoriesIndexRoute() {
 	return (
