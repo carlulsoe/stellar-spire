@@ -263,7 +263,7 @@ export function ErrorBoundary() {
 		<GeneralErrorBoundary
 			statusHandlers={{
 				404: ({ params }) => (
-					<p>No note with the id "{params.noteId}" exists</p>
+					<p>No story with the id "{params.storyId}" exists</p>
 				),
 			}}
 		/>
