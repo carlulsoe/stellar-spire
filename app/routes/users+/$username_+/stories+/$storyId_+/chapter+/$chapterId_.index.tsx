@@ -33,9 +33,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
-	return <div>
-		<h1>{data.chapter.title}</h1>
-		<div>{data.chapter.content}</div>
+	return <div className="container pt-12">
+		<h1 className="text-h1">{data.chapter.title}</h1>
+		<div className="text-body-lg whitespace-break-spaces">{data.chapter.content}</div>
 		{data.nextChapter ? (
 			<Link
 				to={`/users/${data.username}/stories/${data.storyId}/chapter/${data.nextChapter.id}`}

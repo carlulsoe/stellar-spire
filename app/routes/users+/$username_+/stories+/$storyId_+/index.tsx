@@ -50,6 +50,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 					title: true,
 					content: true,
 					updatedAt: true,
+					number: true,
 				},
 			},
 		},
@@ -134,18 +135,21 @@ export default function StoryRoute() {
 						</li>
 					))}
 				</ul>
-				<p className="whitespace-break-spaces text-sm md:text-lg">
-					{data.story.description}
-				</p>
+				<div className="flex flex-col gap-2">
+					<h3 className="text-h3">Description</h3>
+					<p className="whitespace-break-spaces text-sm md:text-lg">
+						{data.story.description}
+					</p>
+				</div>
 			</div>
-			<ul>
+			<ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
 				{data.story.chapters.map((chapter) => (
-					<li key={chapter.id}>
-						<Link to={`chapter/${chapter.id}`}>{chapter.title}</Link>
+					<li key={chapter.id} className="text-body-lg text-foreground/90 p-2">
+						<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center"><p>Chapter {chapter.number}: {chapter.title}</p> <p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))}</p></Link>
 					</li>
 				))}
 			</ul>
-			<div>
+			<div className="flex justify-end">
 				<Button>
 					<Link to="chapter/new">New Chapter</Link>
 				</Button>
