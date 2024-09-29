@@ -44,6 +44,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
 					altText: true,
 				},
 			},
+			chapters: {
+				select: {
+					id: true,
+					title: true,
+					content: true,
+					updatedAt: true,
+				},
+			},
 		},
 	})
 
@@ -129,6 +137,18 @@ export default function StoryRoute() {
 				<p className="whitespace-break-spaces text-sm md:text-lg">
 					{data.story.description}
 				</p>
+			</div>
+			<ul>
+				{data.story.chapters.map((chapter) => (
+					<li key={chapter.id}>
+						<Link to={`chapter/${chapter.id}`}>{chapter.title}</Link>
+					</li>
+				))}
+			</ul>
+			<div>
+				<Button>
+					<Link to="chapter/new">New Chapter</Link>
+				</Button>
 			</div>
 			{displayBar ? (
 				<div className={floatingToolbarClassName}>
