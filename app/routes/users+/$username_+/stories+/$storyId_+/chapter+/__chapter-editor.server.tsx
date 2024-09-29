@@ -18,7 +18,8 @@ import {
 
 export async function action({ request }: ActionFunctionArgs) {
 	const userId = await requireUserId(request)
-	const urlList = request.url.split('/') /* ['http:', '', 'localhost:3001', 'users', 'carluc', 'stories', 'cm1l0eis80001bmgpk94f9ud5', 'chapter', 'new'] */
+	invariant(userId, 'userId is required')
+	const urlList = request.url.split('/') /* e.g. ['http:', '', 'localhost:3001', 'users', 'carluc', 'stories', 'cm1l0eis80001bmgpk94f9ud5', 'chapter', 'new'] */
 	const storyId = urlList[urlList.length - 3]
 	const username = urlList[urlList.length - 5]
 
@@ -48,8 +49,6 @@ export async function action({ request }: ActionFunctionArgs) {
 		}),
 		async: true,
 	})
-
-	console.log('submission', submission)
 
 	if (submission.status !== 'success') {
 		return json(
