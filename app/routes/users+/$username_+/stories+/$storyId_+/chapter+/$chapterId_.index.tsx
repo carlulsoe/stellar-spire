@@ -2,8 +2,8 @@ import { invariantResponse } from "@epic-web/invariant"
 import { json, type LoaderFunctionArgs } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
-import { prisma } from "#app/utils/db.server.js"
 import { Button } from "#app/components/ui/button.js"
+import { prisma } from "#app/utils/db.server.js"
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const chapter = await prisma.chapter.findUnique({
@@ -35,8 +35,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
 	return <div className="container pt-12">
-		<h1 className="text-h1">{data.chapter.title}</h1>
+		<h1 className="text-h1">Chapter {data.chapter.number}: {data.chapter.title}</h1>
+		<p className="text-body-lg">by {data.username}</p>
 		<div className="text-body-lg whitespace-break-spaces">{data.chapter.content}</div>
+
 		{data.nextChapter ? (<div className="flex justify-end">
 			<Button>
 				<Link

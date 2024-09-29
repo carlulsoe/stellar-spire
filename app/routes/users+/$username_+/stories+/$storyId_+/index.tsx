@@ -37,6 +37,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 			title: true,
 			description: true,
 			authorId: true,
+			author: { select: { username: true } },
 			updatedAt: true,
 			images: {
 				select: {
@@ -63,7 +64,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 	return json({
 		story,
-		timeAgo,
+		timeAgo
 	})
 }
 
@@ -120,9 +121,9 @@ export default function StoryRoute() {
 
 	return (
 		<div className="absolute inset-0 flex flex-col px-10">
-			<h2 className="mb-2 pt-12 text-h2 lg:mb-6">{data.story.title}</h2>
+			<h2 className="mb-2 pt-6 text-h2 lg:mb-3">{data.story.title}</h2>
 			<div className={`${displayBar ? 'pb-24' : 'pb-12'} overflow-y-auto`}>
-				<ul className="flex flex-wrap gap-5 py-5">
+				<ul className="flex flex-wrap gap-5 py-2">
 					{data.story.images.map((image) => (
 						<li key={image.id}>
 							<a href={getNoteImgSrc(image.id)}>
@@ -142,18 +143,31 @@ export default function StoryRoute() {
 					</p>
 				</div>
 			</div>
-			<ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
-				{data.story.chapters.map((chapter) => (
-					<li key={chapter.id} className="text-body-lg text-foreground/90 p-2">
-						<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center"><p>Chapter {chapter.number}: {chapter.title}</p> <p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))}</p></Link>
-					</li>
-				))}
-			</ul>
-			<div className="flex justify-end">
-				<Button>
-					<Link to="chapter/new">New Chapter</Link>
-				</Button>
+			{data.story.chapters[0] ? (<Button asChild>
+				<Link
+					to={`/users/${data.story.author.username}/stories/${data.story.id}/chapter/${data.story.chapters[0].id}`}
+				>
+					Read Now
+				</Link>
+			</Button>) : null}
+			<div className="flex flex-col gap-2 pt-3">
+				<div className="flex flex-row justify-between items-center">
+					<h3 className="text-h3">Chapters:</h3>
+					{isAuthor ? <div className="flex justify-end">
+						<Button>
+							<Link to="chapter/new">New Chapter</Link>
+						</Button>
+					</div> : null}
+				</div>
+				<ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
+					{data.story.chapters.map((chapter) => (
+						<li key={chapter.id} className="text-body-lg text-foreground/90 p-2">
+							<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center"><p>Chapter {chapter.number}: {chapter.title}</p> <p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))} ago</p></Link>
+						</li>
+					))}
+				</ul>
 			</div>
+
 			{displayBar ? (
 				<div className={floatingToolbarClassName}>
 					<span className="text-sm text-foreground/90 max-[524px]:hidden">
