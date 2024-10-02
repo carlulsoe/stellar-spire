@@ -113,7 +113,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		orderBy: {
 			likesCount: 'desc',
 		},
-		take: 4,
+		take: 10,
 	})
 
 	invariantResponse(popularStories, 'Popular stories not found', {
@@ -130,7 +130,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			author: { select: { id: true, name: true, username: true } },
 		},
 		orderBy: { createdAt: 'desc' },
-		take: 4,
+		take: 10,
 	})
 
 	invariantResponse(
@@ -195,55 +195,83 @@ export default function Index() {
 			)}
 			<div className="container mx-auto mb-8 mt-8 px-4">
 				<h2 className="mb-4 text-2xl font-bold">Popular Stories</h2>
-				<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-					{popularStories.map((story) => (
-						<Card key={story.id} className="w-[320px]">
-							<CardHeader>
-								<CardTitle>{story.title}</CardTitle>
-								<CardDescription>
-									by {story.author.name}
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<p className="mb-4 text-sm">{story.description}</p>
-							</CardContent>
-							<CardFooter>
-								<a
-									href={`/users/${story.author.username}/stories/${story.id}`}
-									className="text-blue-500 hover:underline"
-								>
-									Read more
-								</a>
-							</CardFooter>
-						</Card>
-					))}
-				</div>
+				<Carousel
+					opts={{
+						align: 'start',
+					}}
+					className="w-full"
+				>
+					<CarouselContent>
+						{popularStories.map((story) => (
+							<CarouselItem
+								key={story.id}
+								className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+							>
+								<Card className="w-full">
+									<CardHeader>
+										<CardTitle>{story.title}</CardTitle>
+										<CardDescription>
+											by {story.author.name}
+										</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<p className="mb-4 text-sm">{story.description}</p>
+									</CardContent>
+									<CardFooter>
+										<a
+											href={`/users/${story.author.username}/stories/${story.id}`}
+											className="text-blue-500 hover:underline"
+										>
+											Read more
+										</a>
+									</CardFooter>
+								</Card>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<CarouselPrevious />
+					<CarouselNext />
+				</Carousel>
 			</div>
 			<div className="container mx-auto mb-8 mt-8 px-4">
 				<h2 className="mb-4 text-2xl font-bold">Recently Updated Stories</h2>
-				<div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-					{recentlyUpdatedStories.map((story) => (
-						<Card key={story.id} className="w-[320px]">
-							<CardHeader>
-								<CardTitle>{story.title}</CardTitle>
-								<CardDescription>
-									by {story.author.name}
-								</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<p className="mb-4 text-sm">{story.description}</p>
-							</CardContent>
-							<CardFooter>
-								<a
-									href={`/users/${story.author.username}/stories/${story.id}`}
-									className="text-blue-500 hover:underline"
-								>
-									Read more
-								</a>
-							</CardFooter>
-						</Card>
-					))}
-				</div>
+				<Carousel
+					opts={{
+						align: 'start',
+					}}
+					className="w-full"
+				>
+					<CarouselContent>
+						{recentlyUpdatedStories.map((story) => (
+							<CarouselItem
+								key={story.id}
+								className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+							>
+								<Card className="w-full">
+									<CardHeader>
+										<CardTitle>{story.title}</CardTitle>
+										<CardDescription>
+											by {story.author.name}
+										</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<p className="mb-4 text-sm">{story.description}</p>
+									</CardContent>
+									<CardFooter>
+										<a
+											href={`/users/${story.author.username}/stories/${story.id}`}
+											className="text-blue-500 hover:underline"
+										>
+											Read more
+										</a>
+									</CardFooter>
+								</Card>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+					<CarouselPrevious />
+					<CarouselNext />
+				</Carousel>
 			</div>
 		</main>
 	)
