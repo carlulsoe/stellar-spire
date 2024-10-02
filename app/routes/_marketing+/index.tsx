@@ -168,7 +168,9 @@ export default function Index() {
 										<Card key={story.id} className="w-[320px]">
 											<CardHeader>
 												<CardTitle>{story.title}</CardTitle>
-												<CardDescription>{story.author.name}</CardDescription>
+												<CardDescription>
+													by {story.author.name}
+												</CardDescription>
 											</CardHeader>
 											<CardContent>
 												<p className="mb-4 text-sm">{story.description}</p>
@@ -198,7 +200,9 @@ export default function Index() {
 						<Card key={story.id} className="w-[320px]">
 							<CardHeader>
 								<CardTitle>{story.title}</CardTitle>
-								<CardDescription>{story.author.name}</CardDescription>
+								<CardDescription>
+									by {story.author.name}
+								</CardDescription>
 							</CardHeader>
 							<CardContent>
 								<p className="mb-4 text-sm">{story.description}</p>
@@ -222,7 +226,9 @@ export default function Index() {
 						<Card key={story.id} className="w-[320px]">
 							<CardHeader>
 								<CardTitle>{story.title}</CardTitle>
-								<CardDescription>{story.author.name}</CardDescription>
+								<CardDescription>
+									by {story.author.name}
+								</CardDescription>
 							</CardHeader>
 							<CardContent>
 								<p className="mb-4 text-sm">{story.description}</p>
