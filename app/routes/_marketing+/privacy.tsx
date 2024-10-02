@@ -9,7 +9,7 @@ export default function PrivacyRoute() {
 			<div className="space-y-4">
 				<section>
 					<h2 className="text-xl font-semibold mb-2">1. Introduction</h2>
-					<p>This Privacy Policy explains how we collect, use, process, and disclose your information, including personal information, in conjunction with your access to and use of our story hosting platform.</p>
+					<p>This Privacy Policy explains how we collect, use, process, and disclose your information, including personal information, in conjunction with your access to and use of {CONFIG.SITENAME}.</p>
 				</section>
 
 				<section>
