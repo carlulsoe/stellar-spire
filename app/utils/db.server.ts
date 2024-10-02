@@ -31,6 +31,53 @@ export const prisma = remember('prisma', () => {
 		const dur = chalk[color](`${e.duration}ms`)
 		console.info(`prisma:query - ${dur} - ${e.query}`)
 	})
+	client.$extends({
+		name: 'updateStoryLikes',
+		query: {
+		  chapter: {
+			async create({ args, query }) {
+			  const result = await query(args)
+			  if (result.storyId) {
+				await updateStoryTotalLikes(result.storyId)
+			  }
+			  return result
+			},
+			async update({ args, query }) {
+			  const result = await query(args)
+			  if (result.storyId) {
+				await updateStoryTotalLikes(result.storyId)
+			  }
+			  return result
+			},
+			async delete({ args, query }) {
+			  const chapter = await prisma.chapter.findUnique({
+				where: args.where,
+				select: { storyId: true }
+			  })
+			  const result = await query(args)
+			  if (chapter?.storyId) {
+				await updateStoryTotalLikes(chapter.storyId)
+			  }
+			  return result
+			},
+		  },
+		},
+	  })
+
 	void client.$connect()
 	return client
 })
+
+async function updateStoryTotalLikes(storyId: string) {
+	const chapters = await prisma.chapter.findMany({
+	  where: { storyId },
+	  select: { likes: true }
+	})
+	
+	const likesCount = chapters.reduce((sum, chapter) => sum + chapter.likes.length, 0)
+	
+	await prisma.story.update({
+	  where: { id: storyId },
+	  data: { likesCount }	
+	})
+  }
