@@ -7,6 +7,7 @@ import { prisma } from '#app/utils/db.server.ts'
 import { cn, getUserImgSrc } from '#app/utils/misc.tsx'
 import { useOptionalUser } from '#app/utils/user.ts'
 
+
 export async function loader({ params }: LoaderFunctionArgs) {
 	const author = await prisma.user.findFirst({
 		select: {

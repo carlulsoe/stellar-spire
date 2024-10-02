@@ -10,7 +10,9 @@ fiction online.
 
 ## TODO list
 
-- add a way to upload a story
-- add a way to read a story
+- add a way to upload a story (DONE)
+- add a way to read a story (DONE)
 - add basic recommendations (DONE)
 - update search functionallity to include stories.
+- Want to remove the side bar.
+

@@ -1,4 +1,5 @@
 import { type MetaFunction } from '@remix-run/react'
+import { CONFIG } from '#app/config.ts'
 import { type loader as storiesLoader } from '../stories.tsx'
 
 export default function StoriesIndexRoute() {
@@ -20,10 +21,10 @@ export const meta: MetaFunction<
 	const storyCount = storiesMatch?.data?.author.stories.length ?? 0
 	const storiesText = storyCount === 1 ? 'story' : 'stories'
 	return [
-		{ title: `${displayName}'s Stories | Stellar Stories` },
+		{ title: `${displayName}'s Stories | ${CONFIG.SITENAME}` },
 		{
 			name: 'description',
-			content: `Checkout ${displayName}'s ${storyCount} ${storiesText} on Stellar Stories`,
+			content: `Checkout ${displayName}'s ${storyCount} ${storiesText} on ${CONFIG.SITENAME}`,
 		},
 	]
 }

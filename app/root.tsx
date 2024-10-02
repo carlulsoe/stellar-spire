@@ -49,6 +49,7 @@ import { type Theme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
+import { CONFIG } from '#app/config.ts'
 
 export const links: LinksFunction = () => {
 	return [
@@ -72,7 +73,7 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
-		{ title: data ? 'Stellar Ink' : 'Error | Stellar Ink' },
+		{ title: data ? CONFIG.SITENAME : 'Error | ' + CONFIG.SITENAME },
 		{ name: 'description', content: `Your own captain's log` },
 	]
 }
@@ -277,13 +278,14 @@ function App() {
 }
 
 function Logo() {
+	const sitename_list = CONFIG.SITENAME.split(' ')
 	return (
 		<Link to="/" className="group grid leading-snug">
 			<span className="font-light transition group-hover:-translate-x-1">
-				Stellar
+				{sitename_list[0]}
 			</span>
 			<span className="font-bold transition group-hover:translate-x-1">
-				Ink
+				{sitename_list[1]}
 			</span>
 		</Link>
 	)
