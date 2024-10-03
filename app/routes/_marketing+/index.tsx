@@ -95,7 +95,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	invariantResponse(recommendedStories, 'Recommended stories not found', {
 		status: 404,
 	})
-	// We only want to show the 4 most popular stories
+	
 	const popularStories = await prisma.story.findMany({
 		select: {
 			id: true,
@@ -120,7 +120,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		status: 404,
 	})
 
-	// Should show 4 recently updated stories
 	const recentlyUpdatedStories = await prisma.story.findMany({
 		select: {
 			id: true,
