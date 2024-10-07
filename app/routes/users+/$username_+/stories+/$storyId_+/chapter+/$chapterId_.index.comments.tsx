@@ -1,6 +1,6 @@
 import { invariant, invariantResponse } from "@epic-web/invariant"
 import { type LoaderFunctionArgs, type ActionFunctionArgs , json } from "@remix-run/node"
-import { useLoaderData, Form } from "@remix-run/react"
+import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
 import { ChevronUp, ChevronDown, MessageSquare } from 'lucide-react'
 import { useState } from 'react'
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
@@ -59,21 +59,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ comments, status: 200 })
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData()
   const content = formData.get("content")
   const parentId = formData.get("parentId")
   
   const userId = await requireUserId(request)
 
-  if (typeof content !== "string") {
-    return json({ error: "Content must be a string" }, { status: 400 })
+  if (typeof content !== "string" || content.trim() === "") {
+    return json({ error: "Content must be a non-empty string" }, { status: 400 })
   }
+
+  const { chapterId } = params
+  invariant(chapterId, "chapterId is required")
 
   const comment = await prisma.comment.create({
     data: {
       content,
       authorId: userId,
+      chapterId,
       ...(parentId && typeof parentId === "string"
         ? { parentId }
         : {}),
@@ -129,6 +133,9 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
 
 function CommentForm({ parentId }: { parentId?: string }) {
   const [content, setContent] = useState('')
+  const actionData = useActionData<typeof action>()
+  const navigation = useNavigation()
+  const isSubmitting = navigation.state === "submitting"
 
   return (
     <Form method="post" className="mt-4">
@@ -140,20 +147,26 @@ function CommentForm({ parentId }: { parentId?: string }) {
         className="min-h-[100px]"
       />
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
-      <Button type="submit" className="mt-2">
-        Comment
+      <Button type="submit" className="mt-2" disabled={isSubmitting}>
+        {isSubmitting ? "Posting..." : "Comment"}
       </Button>
+      {actionData?.error && <p className="text-red-500 mt-2">{actionData.error}</p>}
     </Form>
   )
 }
 
 export default function CommentsRoute() {
   const { comments, status } = useLoaderData<typeof loader>()
+  const navigation = useNavigation()
+  const isReloading = navigation.state === "loading"
+
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Comments</h1>
       <CommentForm />
-      { status === 200 ? (
+      {isReloading ? (
+        <p>Loading comments...</p>
+      ) : status === 200 ? (
         comments.map(comment => (
           <CommentComponent key={comment.id} comment={comment as unknown as Comment} />
         ))
