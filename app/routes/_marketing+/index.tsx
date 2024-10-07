@@ -4,7 +4,7 @@ import {
 	json,
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import {
 	Card,
 	CardContent,
@@ -22,6 +22,7 @@ import {
 } from '#app/components/ui/carousel.tsx'
 import { getUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.ts'
+import { Button } from '#app/components/ui/button.js'
 
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 async function getRecommendedStories(userId: string) {
@@ -95,7 +96,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	invariantResponse(recommendedStories, 'Recommended stories not found', {
 		status: 404,
 	})
-	
+
 	const popularStories = await prisma.story.findMany({
 		select: {
 			id: true,
@@ -171,16 +172,17 @@ export default function Index() {
 													by {story.author.name}
 												</CardDescription>
 											</CardHeader>
-											<CardContent>
-												<p className="mb-4 text-sm">{story.description}</p>
+											<CardContent className="max-h-28 min-h-28">
+												<p className="mb-4 text-sm line-clamp-4">{story.description}</p>
 											</CardContent>
 											<CardFooter>
-												<a
-													href={`/users/${story.author.username}/stories/${story.id}`}
-													className="text-blue-500 hover:underline"
-												>
-													Read more
-												</a>
+												<Button>
+													<Link
+														to={`/users/${story.author.username}/stories/${story.id}`}
+													>
+														Read more
+													</Link>
+												</Button>
 											</CardFooter>
 										</Card>
 									</div>
@@ -213,16 +215,17 @@ export default function Index() {
 											by {story.author.name}
 										</CardDescription>
 									</CardHeader>
-									<CardContent>
-										<p className="mb-4 text-sm">{story.description}</p>
+									<CardContent className="max-h-28 min-h-28">
+										<p className="mb-4 text-sm line-clamp-4">{story.description}</p>
 									</CardContent>
 									<CardFooter>
-										<a
-											href={`/users/${story.author.username}/stories/${story.id}`}
-											className="text-blue-500 hover:underline"
-										>
-											Read more
-										</a>
+										<Button>
+											<Link
+												to={`/users/${story.author.username}/stories/${story.id}`}
+											>
+												Read more
+											</Link>
+										</Button>
 									</CardFooter>
 								</Card>
 							</CarouselItem>
@@ -253,16 +256,17 @@ export default function Index() {
 											by {story.author.name}
 										</CardDescription>
 									</CardHeader>
-									<CardContent>
-										<p className="mb-4 text-sm">{story.description}</p>
+									<CardContent className="max-h-28 min-h-28">
+										<p className="mb-4 text-sm line-clamp-4">{story.description}</p>
 									</CardContent>
 									<CardFooter>
-										<a
-											href={`/users/${story.author.username}/stories/${story.id}`}
-											className="text-blue-500 hover:underline"
-										>
-											Read more
-										</a>
+										<Button>
+											<Link
+												to={`/users/${story.author.username}/stories/${story.id}`}
+											>
+												Read more
+											</Link>
+										</Button>
 									</CardFooter>
 								</Card>
 							</CarouselItem>

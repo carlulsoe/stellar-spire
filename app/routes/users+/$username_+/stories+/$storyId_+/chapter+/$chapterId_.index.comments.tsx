@@ -133,24 +133,22 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
 
 function CommentForm({ parentId }: { parentId?: string }) {
   const [content, setContent] = useState('')
-  const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const isSubmitting = navigation.state === "submitting"
-
+  // TODO: the comment do no upload to the database
   return (
     <Form method="post" className="mt-4">
       <Textarea
         name="content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="What are your thoughts?"
+        placeholder="What are your thoughts on the chapter?"
         className="min-h-[100px]"
       />
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
       <Button type="submit" className="mt-2" disabled={isSubmitting}>
         {isSubmitting ? "Posting..." : "Comment"}
       </Button>
-      {actionData?.error && <p className="text-red-500 mt-2">{actionData.error}</p>}
     </Form>
   )
 }
