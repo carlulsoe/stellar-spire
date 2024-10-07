@@ -47,8 +47,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
 	return <div className="container pt-12">
-		<h1 className="text-h1">Chapter {data.chapter.number}: {data.chapter.title}</h1>
-		<p className="text-body-lg">by {data.username}</p>
+		<h1 className="text-h1 mb-1">Chapter {data.chapter.number}: {data.chapter.title}</h1>
+		<p className="text-body-lg text-muted-foreground mb-8">by {data.username}</p>
 		<div className="text-body-lg whitespace-break-spaces">{data.chapter.content}</div>
 		<div className="flex justify-end gap-4">
 			<Form method="POST">

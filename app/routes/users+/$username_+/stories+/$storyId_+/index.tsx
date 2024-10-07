@@ -122,6 +122,7 @@ export default function StoryRoute() {
 	return (
 		<div className="absolute inset-0 flex flex-col px-10">
 			<h2 className="mb-2 pt-6 text-h2 lg:mb-3">{data.story.title}</h2>
+			<p className="text-body-lg text-muted-foreground mb-2">by {data.story.author.username}</p>
 			<div className={`${displayBar ? 'pb-24' : 'pb-12'} overflow-y-auto`}>
 				<ul className="flex flex-wrap gap-5 py-2">
 					{data.story.images.map((image) => (
