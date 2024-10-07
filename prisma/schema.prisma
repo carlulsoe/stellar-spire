@@ -27,6 +27,8 @@ model User {
   similaritiesAsUser1 UserSimilarity[] @relation("User1")
   similaritiesAsUser2 UserSimilarity[] @relation("User2")
 
+
+  Comment Comment[]
 }
 
 model Story {
@@ -120,6 +122,23 @@ model ChapterView {
 
   @@index([userId])
   @@index([chapterId])
+}
+
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String
+  score     Int       @default(0)
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([authorId])
+  @@index([parentId])
 }
 
 model StoryImage {

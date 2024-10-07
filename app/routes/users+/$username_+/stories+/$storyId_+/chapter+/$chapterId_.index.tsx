@@ -6,6 +6,8 @@ import { Button } from "#app/components/ui/button.js"
 import { Icon } from "#app/components/ui/icon.js"
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
+import CommentsRoute from "./$chapterId_.index.comments"
+
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const chapter = await prisma.chapter.findUnique({
@@ -64,6 +66,9 @@ export default function ChapterRoute() {
 					</Link>
 				</Button>
 			) : null}
+		</div>
+		<div className="flex-1">
+			<CommentsRoute />
 		</div>
 	</div>
 }
