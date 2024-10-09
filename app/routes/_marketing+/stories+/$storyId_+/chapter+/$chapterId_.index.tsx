@@ -72,7 +72,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
-	
+
 	return (
 		<div>
 			<StoryReaderComponent
@@ -94,7 +94,7 @@ export default function ChapterRoute() {
 export async function action({ request, params }: ActionFunctionArgs) {
 	const userId = await requireUserId(request)
 	const { chapterId } = params
-	
+
 	invariantResponse(chapterId, 'Not found', { status: 404 })
 
 	const existingLike = await prisma.likes.findFirst({
