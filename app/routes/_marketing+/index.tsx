@@ -178,7 +178,7 @@ export default function Index() {
 											<CardFooter>
 												<Button>
 													<Link
-														to={`/users/${story.author.username}/stories/${story.id}`}
+														to={`/stories/${story.id}`}
 													>
 														Read more
 													</Link>
@@ -221,7 +221,7 @@ export default function Index() {
 									<CardFooter>
 										<Button>
 											<Link
-												to={`/users/${story.author.username}/stories/${story.id}`}
+												to={`/stories/${story.id}`}
 											>
 												Read more
 											</Link>
@@ -262,7 +262,7 @@ export default function Index() {
 									<CardFooter>
 										<Button>
 											<Link
-												to={`/users/${story.author.username}/stories/${story.id}`}
+												to={`/stories/${story.id}`}
 											>
 												Read more
 											</Link>

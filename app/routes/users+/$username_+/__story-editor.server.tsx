@@ -126,6 +126,6 @@ export async function action({ request }: ActionFunctionArgs) {
 	})
 
 	return redirect(
-		`/users/${updatedStory.author.username}/stories/${updatedStory.id}`,
+		`/stories/${updatedStory.id}`,
 	)
 }

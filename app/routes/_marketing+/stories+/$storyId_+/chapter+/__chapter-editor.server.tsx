@@ -1,5 +1,5 @@
 import { parseWithZod } from '@conform-to/zod'
-import { invariant } from '@epic-web/invariant'
+import { invariant, invariantResponse } from '@epic-web/invariant'
 import {
 	unstable_createMemoryUploadHandler as createMemoryUploadHandler,
 	json,
@@ -19,13 +19,18 @@ import {
 export async function action({ request }: ActionFunctionArgs) {
 	const userId = await requireUserId(request)
 	invariant(userId, 'userId is required')
+
 	const urlList = request.url.split('/') /* e.g. ['http:', '', 'localhost:3001', 'users', 'carluc', 'stories', 'cm1l0eis80001bmgpk94f9ud5', 'chapter', 'new'] */
 	const storyId = urlList[urlList.length - 3]
-	const username = urlList[urlList.length - 5]
-
 	invariant(storyId, 'storyId is required')
 	invariant(typeof storyId === 'string', 'storyId is required')
-	console.log('storyId', storyId)
+
+	const authorId = await prisma.story.findUnique({
+		select: { authorId: true },
+		where: { id: storyId },
+	})
+	invariant(authorId, 'authorId is required')
+	invariantResponse(authorId.authorId === userId, 'You are not the author of this story', { status: 403 })
 
 	const formData = await parseMultipartFormData(
 		request,
@@ -82,6 +87,6 @@ export async function action({ request }: ActionFunctionArgs) {
 	})
 
 	return redirect(
-		`/users/${username}/stories/${storyId}/chapter/${updatedChapter.id}`,
+		`/stories/${storyId}/chapter/${updatedChapter.id}`,
 	)
 }

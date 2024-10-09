@@ -54,7 +54,7 @@ export default function StoriesRoute() {
 							{isAuthor ? (
 								<li className="p-1 pr-0">
 									<NavLink
-										to="new"
+										to="/stories/new"
 										className={({ isActive }) =>
 											cn(navLinkDefaultClassName, isActive && 'bg-accent')
 										}

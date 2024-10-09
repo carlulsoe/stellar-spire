@@ -135,7 +135,7 @@ function CommentForm({ parentId }: { parentId?: string }) {
   const [content, setContent] = useState('')
   const navigation = useNavigation()
   const isSubmitting = navigation.state === "submitting"
-  // TODO: the comment do no upload to the database
+  // TODO: the comment does no upload to the database
   return (
     <Form method="post" className="mt-4">
       <Textarea

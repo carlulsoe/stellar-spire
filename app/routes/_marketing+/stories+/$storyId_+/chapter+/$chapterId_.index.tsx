@@ -60,7 +60,7 @@ export default function ChapterRoute() {
 			{data.nextChapter ? (
 				<Button variant="outline" size="lg">
 					<Link
-						to={`/users/${data.username}/stories/${data.storyId}/chapter/${data.nextChapter.id}`}
+						to={`/stories/${data.storyId}/chapter/${data.nextChapter.id}`}
 					>
 						Next Chapter
 					</Link>

@@ -1,6 +1,6 @@
 import { type MetaFunction } from '@remix-run/react'
 import { CONFIG } from '#app/config.ts'
-import { type loader as storiesLoader } from '../stories.tsx'
+import { type loader as storiesLoader } from '../../users+/$username_+/stories.tsx'
 
 export default function StoriesIndexRoute() {
 	return (

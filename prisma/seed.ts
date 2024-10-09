@@ -304,6 +304,53 @@ async function seed() {
 	})
 	console.timeEnd(`🐨 Created admin user "kody"`)
 
+	await prisma.user.create({
+		select: { id: true },
+		data: {
+			email: 'jrwordsmith@gmail.com',
+			username: 'jrwordsmith',
+			name: 'J.R. Wordsmith',
+			image: { create: kodyImages.kodyUser },
+			password: { create: createPassword('ilovewriting') },
+			roles: { connect: [{ name: 'user' }] },
+			stories: {
+				create: [{
+					title: 'The Enchanted Forest',
+					description: 'A magical forest that is home to all kinds of creatures.',
+					chapters: {
+						create: {
+							title: 'The Enchanted Forest',
+							content: `Deep in the heart of an ancient woodland, where sunlight filtered through layers of emerald leaves, there stood a tree unlike any other. Its bark shimmered with an otherworldly glow, and its branches seemed to whisper secrets to those who listened closely.
+
+    Lily, a curious young explorer with wild curls and bright eyes, had heard tales of this magical forest since she was a child. Now, at the age of twelve, she had finally convinced her parents to let her embark on a camping trip with her best friend, Max.
+
+    As they ventured deeper into the woods, the air grew thick with mystery. Fireflies danced around them, leaving trails of golden light in their wake. The forest floor was soft beneath their feet, cushioned by years of fallen leaves and moss.
+
+    "Do you think we'll find it?" Max whispered, his voice tinged with both excitement and apprehension.
+
+    Lily nodded, her determination unwavering. "We have to. It's been calling to us in our dreams, remember?"
+
+    Just as the words left her lips, they stumbled into a clearing bathed in moonlight. And there, in the center, stood the tree from their shared visions – its trunk spiraling towards the sky, branches adorned with leaves that sparkled like stardust.
+
+    As they approached, the tree seemed to come alive. Its branches swayed gently, though there was no breeze. A soft humming filled the air, a melody so beautiful it brought tears to their eyes.
+
+    Lily reached out, her fingertips barely grazing the glowing bark. In that instant, a flood of images rushed through her mind – ancient rituals, forgotten spells, and the faces of those who had stood in this very spot centuries ago.
+
+    "We found it," she breathed, her voice filled with wonder. "The heart of the Enchanted Forest."
+
+    Max grinned, squeezing her hand. "No, Lily. It found us."
+
+    As the night deepened around them, Lily and Max knew their adventure was just beginning. The Enchanted Forest had chosen them, and with that choice came a responsibility they were only beginning to understand.
+
+    The tree's glow pulsed gently, like a heartbeat, welcoming them home to a world of magic they had only dreamed of until now."
+`
+						},
+					},
+				}]
+			}
+		}
+	})
+
 	console.timeEnd(`🌱 Database has been seeded`)
 }
 

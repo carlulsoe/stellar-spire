@@ -27,7 +27,7 @@ import { getNoteImgSrc, useIsPending } from '#app/utils/misc.tsx'
 import { requireUserWithPermission } from '#app/utils/permissions.server.ts'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
-import { type loader as storiesLoader } from '../../stories.tsx'
+import { type loader as storiesLoader } from '../../../users+/$username_+/stories.tsx'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const story = await prisma.story.findUnique({
@@ -146,7 +146,7 @@ export default function StoryRoute() {
 			</div>
 			{data.story.chapters[0] ? (<Button asChild>
 				<Link
-					to={`/users/${data.story.author.username}/stories/${data.story.id}/chapter/${data.story.chapters[0].id}`}
+					to={`/stories/${data.story.id}/chapter/${data.story.chapters[0].id}`}
 				>
 					Read Now
 				</Link>
