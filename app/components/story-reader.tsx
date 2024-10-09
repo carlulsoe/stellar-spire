@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '#app/components/ui/button.tsx'
 import { Card } from '#app/components/ui/card.tsx'
+import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.ts'
 
 export function StoryReaderComponent(data: {
   storyId: Story['id']
@@ -25,7 +26,7 @@ export function StoryReaderComponent(data: {
   const [fontSize, setFontSize] = useState(16)
   const [progress, setProgress] = useState(0)
 
-  const estimatedReadingTime = 3 // in minutes
+  const estimatedReadingTime = ReadingTimeEstimator.estimate(data.chapter.content).minutes
 
 
   useEffect(() => {
