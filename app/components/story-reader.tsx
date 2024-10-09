@@ -1,7 +1,7 @@
 'use client'
 
 import { type Chapter, type Story } from '@prisma/client'
-import { Link } from '@remix-run/react' // Add this import
+import { Link } from '@remix-run/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Button } from '#app/components/ui/button.tsx'
