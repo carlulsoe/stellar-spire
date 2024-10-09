@@ -1,25 +1,42 @@
 import { invariantResponse } from "@epic-web/invariant"
+import { type Chapter } from "@prisma/client"
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from "@remix-run/node"
-import { Form, Link, useLoaderData } from "@remix-run/react"
+import { useLoaderData } from "@remix-run/react"
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
-import { Button } from "#app/components/ui/button.js"
-import { Icon } from "#app/components/ui/icon.js"
+import { StoryReaderComponent } from "#app/components/story-reader.js"
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
 import CommentsRoute from "./$chapterId_.index.comments"
 
 
 export async function loader({ params }: LoaderFunctionArgs) {
+	const { storyId, chapterId } = params
+
+	// Ensure both storyId and chapterId are present
+	invariantResponse(storyId && chapterId, 'Invalid story or chapter ID', { status: 400 })
+
 	const chapter = await prisma.chapter.findUnique({
-		where: { id: params.chapterId },
+		where: { id: chapterId },
 		select: {
 			id: true,
 			title: true,
 			content: true,
 			updatedAt: true,
 			number: true,
+			story: {
+				select: {
+					author: {
+						select: {
+							username: true
+						}
+					}
+				}
+			}
 		},
 	})
+
+	// If chapter is not found, throw a 404 error
+	invariantResponse(chapter, 'Chapter not found', { status: 404 })
 
 	const isLiked = await prisma.likes.findFirst({
 		where: {
@@ -28,49 +45,50 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		},
 	})
 
-	invariantResponse(chapter, 'Not found', { status: 404 })
-
 	const nextChapter = await prisma.chapter.findFirst({
 		where: { storyId: params.storyId, number: chapter.number + 1 },
 		select: { id: true },
 	})
 
+	const previousChapter = await prisma.chapter.findFirst({
+		where: { storyId: params.storyId, number: chapter.number - 1 },
+		select: { id: true },
+	})
+
+	const totalChapters = await prisma.chapter.count({
+		where: { storyId: params.storyId },
+	})
+
 	return json({
-		storyId: params.storyId,
-		username: params.username,
+		storyId,
+		author: chapter.story.author.username,
+		previousChapterId: previousChapter?.id ?? null,
 		chapter,
-		nextChapter,
-		isLiked,
+		nextChapterId: nextChapter?.id ?? null,
+		isLiked: !!isLiked,
+		totalChapters
 	})
 }
 
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
-	return <div className="container pt-12">
-		<h1 className="text-h1 mb-1">Chapter {data.chapter.number}: {data.chapter.title}</h1>
-		<p className="text-body-lg text-muted-foreground mb-8">by {data.username}</p>
-		<div className="text-body-lg whitespace-break-spaces">{data.chapter.content}</div>
-		<div className="flex justify-end gap-4">
-			<Form method="POST">
-				<Button variant="outline" size="lg" type="submit">
-					<Icon name={data.isLiked ? "heart-filled" : "heart"} className="mr-2 h-5 w-5" />
-					Like
-				</Button>
-			</Form>
-			{data.nextChapter ? (
-				<Button variant="outline" size="lg">
-					<Link
-						to={`/stories/${data.storyId}/chapter/${data.nextChapter.id}`}
-					>
-						Next Chapter
-					</Link>
-				</Button>
-			) : null}
+	
+	return (
+		<div>
+			<StoryReaderComponent
+				storyId={data.storyId}
+				author={data.author}
+				chapter={data.chapter}
+				nextChapterId={data.nextChapterId}
+				previousChapterId={data.previousChapterId}
+				isLiked={data.isLiked}
+				totalChapters={data.totalChapters}
+			/>
+			<div className="flex-1">
+				<CommentsRoute />
+			</div>
 		</div>
-		<div className="flex-1">
-			<CommentsRoute />
-		</div>
-	</div>
+	)
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
