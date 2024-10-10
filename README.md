@@ -3,6 +3,13 @@
 This is going to be the best place to read fiction and the best place to post
 fiction online.
 
+The main features are:
+
+- Notifications when a followed story is updated
+- Great recommondations
+- Decent comments
+- creator economy, writers should be able to make money on the site.
+
 ## Docs
 
 [Read the docs](https://github.com/epicweb-dev/epic-stack/blob/main/docs)
@@ -10,9 +17,12 @@ fiction online.
 
 ## TODO list
 
-- add a way to upload a story (DONE)
-- add a way to read a story (DONE)
-- add basic recommendations (DONE)
+
 - update search functionallity to include stories.
-- Want to remove the side bar.
+- Add notifications
+- Add stories to prod
+- fix recommendation system
+- fix comments
+- fix likes
+- 
 
