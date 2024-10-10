@@ -18,16 +18,18 @@ import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { floatingToolbarClassName } from '#app/components/floating-toolbar.tsx'
 import { ErrorList } from '#app/components/forms.tsx'
+import { StoryOverviewComponent } from '#app/components/story-overview.js'
 import { Button } from '#app/components/ui/button.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
-import { getNoteImgSrc, useIsPending } from '#app/utils/misc.tsx'
+import { useIsPending } from '#app/utils/misc.tsx'
 import { requireUserWithPermission } from '#app/utils/permissions.server.ts'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
 import { type loader as storiesLoader } from '../../../users+/$username_+/stories.tsx'
+import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.js'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const story = await prisma.story.findUnique({
@@ -121,41 +123,17 @@ export default function StoryRoute() {
 
 	return (
 		<div className="absolute inset-0 flex flex-col px-10">
-			<h2 className="mb-2 pt-6 text-h2 lg:mb-3">{data.story.title}</h2>
-			<p className="text-body-lg text-muted-foreground mb-2">by {data.story.author.username}</p>
-			<div className={`${displayBar ? 'pb-24' : 'pb-12'} overflow-y-auto`}>
-				<ul className="flex flex-wrap gap-5 py-2">
-					{data.story.images.map((image) => (
-						<li key={image.id}>
-							<a href={getNoteImgSrc(image.id)}>
-								<img
-									src={getNoteImgSrc(image.id)}
-									alt={image.altText ?? ''}
-									className="h-32 w-32 rounded-lg object-cover"
-								/>
-							</a>
-						</li>
-					))}
-				</ul>
-				<div className="flex flex-col gap-2">
-					<h3 className="text-h3">Description</h3>
-					<p className="whitespace-break-spaces text-sm md:text-lg">
-						{data.story.description}
-					</p>
-				</div>
-			</div>
-			{data.story.chapters[0] ? (<Button asChild>
-				<Link
-					to={`/stories/${data.story.id}/chapter/${data.story.chapters[0].id}`}
-				>
-					Read Now
-				</Link>
-			</Button>) : null}
+			<StoryOverviewComponent
+				story={data.story}
+				timeAgo={data.timeAgo}
+				estimatedReadTime={data.story.chapters.reduce((total, chapter) => total + ReadingTimeEstimator.estimate(chapter.content).minutes, 0)}
+			/>
+
 			<div className="flex flex-col gap-2 pt-3">
 				<div className="flex flex-row justify-between items-center">
 					<h3 className="text-h3">Chapters:</h3>
 					{isAuthor ? <div className="flex justify-end">
-						<Button>
+						<Button asChild>
 							<Link to="chapter/new">New Chapter</Link>
 						</Button>
 					</div> : null}
@@ -163,7 +141,10 @@ export default function StoryRoute() {
 				<ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
 					{data.story.chapters.map((chapter) => (
 						<li key={chapter.id} className="text-body-lg text-foreground/90 p-2">
-							<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center"><p>Chapter {chapter.number}: {chapter.title}</p> <p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))} ago</p></Link>
+							<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center">
+								<p>Chapter {chapter.number}: {chapter.title}</p>
+								<p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))} ago</p>
+							</Link>
 						</li>
 					))}
 				</ul>
