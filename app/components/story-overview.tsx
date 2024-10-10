@@ -1,12 +1,11 @@
-'use client'
-
 import { Link } from '@remix-run/react'
+import { formatDistanceToNow } from 'date-fns'
 import { Clock, User, BookOpen, Star } from 'lucide-react'
 import { Badge } from "#app/components/ui/badge"
 import { Button } from "#app/components/ui/button"
-import { Card, CardHeader, CardTitle } from "#app/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
 
-export function StoryOverviewComponent({ story }: {
+export function StoryOverviewComponent({ story, isAuthor }: {
   story: {
     id: string;
     title: string;
@@ -35,11 +34,12 @@ export function StoryOverviewComponent({ story }: {
   };
   timeAgo: string;
   estimatedReadTime: number;
+  isAuthor: boolean;
 }) {
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-3xl">
+    <div className="bg-background flex flex-col items-center justify-start p-4">
+      <Card className="w-full max-w-3xl mb-8">
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6">
             <img
@@ -89,6 +89,33 @@ export function StoryOverviewComponent({ story }: {
             </div>
           </div>
         </CardHeader>
+      </Card>
+
+      <Card className="w-full max-w-3xl">
+        <CardContent>
+          <div className="flex flex-col gap-2 pt-3">
+            <div className="flex flex-row justify-between items-center">
+              <h3 className="text-2xl font-semibold">Chapters:</h3>
+              {isAuthor && (
+                <div className="flex justify-end">
+                  <Button asChild>
+                    <Link to={`/stories/${story.id}/chapter/new`}>New Chapter</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+            <ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
+              {story.chapters.map((chapter) => (
+                <li key={chapter.id} className="text-lg text-foreground/90 p-2">
+                  <Link to={`/stories/${story.id}/chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center">
+                    <p>Chapter {chapter.number}: {chapter.title}</p>
+                    <p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))} ago</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </CardContent>
       </Card>
     </div>
   )

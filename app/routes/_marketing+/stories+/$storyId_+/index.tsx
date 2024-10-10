@@ -122,33 +122,13 @@ export default function StoryRoute() {
 	const displayBar = canDelete || isAuthor
 
 	return (
-		<div className="absolute inset-0 flex flex-col px-10">
+		<div className="flex flex-col px-10">
 			<StoryOverviewComponent
 				story={data.story}
 				timeAgo={data.timeAgo}
 				estimatedReadTime={data.story.chapters.reduce((total, chapter) => total + ReadingTimeEstimator.estimate(chapter.content).minutes, 0)}
+				isAuthor={isAuthor}
 			/>
-
-			<div className="flex flex-col gap-2 pt-3">
-				<div className="flex flex-row justify-between items-center">
-					<h3 className="text-h3">Chapters:</h3>
-					{isAuthor ? <div className="flex justify-end">
-						<Button asChild>
-							<Link to="chapter/new">New Chapter</Link>
-						</Button>
-					</div> : null}
-				</div>
-				<ul className="overflow-y-auto overflow-x-hidden pb-12 text-center">
-					{data.story.chapters.map((chapter) => (
-						<li key={chapter.id} className="text-body-lg text-foreground/90 p-2">
-							<Link to={`chapter/${chapter.id}`} className="hover:underline flex flex-row justify-between items-center">
-								<p>Chapter {chapter.number}: {chapter.title}</p>
-								<p className="text-sm text-foreground/50">{formatDistanceToNow(new Date(chapter.updatedAt))} ago</p>
-							</Link>
-						</li>
-					))}
-				</ul>
-			</div>
 
 			{displayBar ? (
 				<div className={floatingToolbarClassName}>
