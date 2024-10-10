@@ -4,6 +4,7 @@ import { Clock, User, BookOpen, Star } from 'lucide-react'
 import { Badge } from "#app/components/ui/badge"
 import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
+import LazyImage from './LazyImage'
 
 export function StoryOverviewComponent({ story, isAuthor }: {
   story: {
@@ -42,11 +43,13 @@ export function StoryOverviewComponent({ story, isAuthor }: {
       <Card className="w-full max-w-3xl mb-8">
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6">
-            <img
-              src={story.coverImage}
-              alt={`Cover of ${story.title}`}
-              width={300}
-              height={400}
+            <LazyImage
+              image={{
+                src: story.coverImage ?? '',
+                alt: `Cover of ${story.title}`,
+                width: 300,
+                height: 400,
+              }}
               className="rounded-lg object-cover"
             />
             <div className="flex flex-col justify-between flex-grow">
