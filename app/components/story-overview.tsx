@@ -76,7 +76,7 @@ export function StoryOverviewComponent({ story, isAuthor }: {
               </div>
               <p className="text-sm text-muted-foreground mb-4">{story.description}</p>
               <div className="flex gap-4">
-                <Link to={`/users/${story.author}`} className="flex-grow" prefetch="viewport" >
+                <Link to={`/users/${story.author.username}`} className="flex-grow" prefetch="viewport" >
                   <Button variant="outline">
                     <User className="mr-2 h-4 w-4" /> Author Profile
                   </Button>

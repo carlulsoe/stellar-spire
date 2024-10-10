@@ -66,7 +66,7 @@ export default function StoriesRoute() {
 							{data.author.stories.map((story) => (
 								<li key={story.id} className="p-1 pr-0">
 									<NavLink
-										to={story.id}
+										to={`/stories/${story.id}`}
 										preventScrollReset
 										prefetch="intent"
 										className={({ isActive }) =>
