@@ -24,5 +24,6 @@ The main features are:
 - fix recommendation system
 - fix comments
 - fix likes
+- add posthog
 - 
 

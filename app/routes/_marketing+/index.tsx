@@ -5,6 +5,7 @@ import {
 	type LoaderFunctionArgs,
 } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { Button } from '#app/components/ui/button.js'
 import {
 	Card,
 	CardContent,
@@ -22,14 +23,12 @@ import {
 } from '#app/components/ui/carousel.tsx'
 import { getUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.ts'
-import { Button } from '#app/components/ui/button.js'
 import { getRecommendedStories } from '#app/utils/story-recommender.server.ts'
 
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	// Assume we have a way to get the current user's ID from the request
 	const userId = await getUserId(request)
 	const recommendedStories = userId ? await getRecommendedStories(userId, 10) : []
 
