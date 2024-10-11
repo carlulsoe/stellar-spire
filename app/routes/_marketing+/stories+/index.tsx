@@ -76,17 +76,12 @@ export default function StoriesRoute() {
 								<li key={story.id}>
 									<Link
 										to={`/stories/${story.id}`}
-										className="flex h-36 w-44 flex-col items-center justify-center rounded-lg bg-muted px-5 py-3"
+										className="flex h-40 w-64 flex-col items-center justify-center rounded-lg bg-muted px-5 py-3"
 									>
-										<img
-											alt={story.authorUsername}
-											src={getUserImgSrc(story.authorImageId)}
-											className="h-16 w-16 rounded-full"
-										/>
-										<span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-body-md">
+										<span className="w-full overflow-hidden text-ellipsis text-center text-body-lg font-semibold mb-2 line-clamp-2">
 											{story.title}
 										</span>
-										<span className="w-full overflow-hidden text-ellipsis text-center text-body-sm text-muted-foreground">
+										<span className="w-full overflow-hidden text-ellipsis text-center text-body-md text-muted-foreground">
 											by {story.authorUsername}
 										</span>
 									</Link>
