@@ -1,14 +1,15 @@
-import { invariant, invariantResponse } from "@epic-web/invariant"
-import { type LoaderFunctionArgs, type ActionFunctionArgs , json } from "@remix-run/node"
+import { getFormProps, getInputProps, useForm } from '@conform-to/react'
+import { getZodConstraint, parseWithZod } from '@conform-to/zod'
+import { invariantResponse } from '@epic-web/invariant'
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
 import { ChevronUp, ChevronDown, MessageSquare } from 'lucide-react'
 import { useState } from 'react'
+import { z } from 'zod'
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import { Avatar, AvatarFallback, AvatarImage } from "#app/components/ui/avatar"
 import { Button } from "#app/components/ui/button"
 import { Textarea } from "#app/components/ui/textarea"
-import { requireUserId } from "#app/utils/auth.server.js"
-import { prisma } from "#app/utils/db.server"
+import { type action, type loader } from './$chapterId_.index.comments.server'
 
 type Comment = {
   id: string
@@ -22,76 +23,10 @@ type Comment = {
   score: number
   replies: Comment[]
 }
-
-export async function loader({ params }: LoaderFunctionArgs) {
-  const { chapterId } = params
-  invariantResponse(chapterId, "chapterId is required", { status: 400 })
-  const comments = await prisma.comment.findMany({
-    where: { chapterId },
-    include: {
-      author: {
-        select: {
-          username: true,
-          image: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      },
-      replies: {
-        include: {
-          author: {
-            select: {
-              username: true,
-              image: {
-                select: {
-                  id: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    take: 10,
-    orderBy: {
-      score: "desc"
-    }
-  })
-  if (comments.length === 0) {
-    return json({ comments: [], status: 404 })
-  }
-  return json({ comments, status: 200 })
-}
-
-export async function action({ request, params }: ActionFunctionArgs) {
-  const formData = await request.formData()
-  const content = formData.get("content")
-  const parentId = formData.get("parentId")
-  
-  const userId = await requireUserId(request)
-
-  if (typeof content !== "string" || content.trim() === "") {
-    return json({ error: "Content must be a non-empty string" }, { status: 400 })
-  }
-
-  const { chapterId } = params
-  invariant(chapterId, "chapterId is required")
-
-  const comment = await prisma.comment.create({
-    data: {
-      content,
-      authorId: userId,
-      chapterId,
-      ...(parentId && typeof parentId === "string"
-        ? { parentId }
-        : {}),
-    },
-  })
-
-  return json({ comment })
-}
+export const CommentSchema = z.object({
+  content: z.string().min(1, "Comment cannot be empty").max(1000, "Comment is too long"),
+  parentId: z.string().optional(),
+})
 
 function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
   const [score, setScore] = useState(comment.score)
@@ -138,16 +73,24 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
 }
 
 function CommentForm({ parentId }: { parentId?: string }) {
-  const [content, setContent] = useState('')
+  const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const isSubmitting = navigation.state === "submitting"
-  // TODO: the comment does no upload to the database
+
+  const [form, fields] = useForm({
+    id: 'comment-form',
+    constraint: getZodConstraint(CommentSchema),
+    lastResult: actionData?.result,
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: CommentSchema })
+    },
+    shouldRevalidate: 'onBlur',
+  })
+
   return (
-    <Form method="post" className="mt-4">
+    <Form method="post" className="mt-4" {...getFormProps(form)}>
       <Textarea
-        name="content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        {...getInputProps(fields.content, { type: 'text' })}
         placeholder="What are your thoughts on the chapter?"
         className="min-h-[100px]"
       />
@@ -182,13 +125,13 @@ export default function CommentsRoute() {
 }
 
 export function ErrorBoundary() {
-	return (
-		<GeneralErrorBoundary
-			statusHandlers={{
-				404: ({ params }) => (
-					<p>No comments found for this chapter</p>
-				),
-			}}
-		/>
-	)
+  return (
+    <GeneralErrorBoundary
+      statusHandlers={{
+        404: ({}) => (
+          <p>No comments found for this chapter</p>
+        ),
+      }}
+    />
+  )
 }
