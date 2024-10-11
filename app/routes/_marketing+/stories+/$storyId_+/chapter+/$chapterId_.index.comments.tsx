@@ -23,9 +23,11 @@ type Comment = {
   replies: Comment[]
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
+  const { chapterId } = params
+  invariantResponse(chapterId, "chapterId is required", { status: 400 })
   const comments = await prisma.comment.findMany({
-    where: { parentId: null },
+    where: { chapterId },
     include: {
       author: {
         select: {
@@ -52,6 +54,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       },
     },
+    take: 10,
+    orderBy: {
+      score: "desc"
+    }
   })
   if (comments.length === 0) {
     return json({ comments: [], status: 404 })
