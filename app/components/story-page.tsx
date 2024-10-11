@@ -40,7 +40,7 @@ export default function StoryPage({
         </div>
         <StoryReaderComponent {...storyData} />
       </div>
-      {!storyData.nextChapterId && (
+      {!storyData.nextChapterId && suggestedStories.length > 0 && (
         <div className="max-w-3xl mx-auto my-8">
           <Card className="p-6">
             <h2 className="text-2xl font-bold mb-4">Suggested Stories</h2>

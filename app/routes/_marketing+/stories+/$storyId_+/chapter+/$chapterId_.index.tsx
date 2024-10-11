@@ -4,11 +4,12 @@ import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from "@remix-r
 import { useLoaderData } from "@remix-run/react"
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import StoryPage from "#app/components/story-page.js"
-import { requireUserId } from '#app/utils/auth.server.ts'
+import { getUserId, requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
+import { getRecommendedStories } from "#app/utils/story-recommender.server.js"
 
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
 	const { storyId, chapterId } = params
 
 	// Ensure both storyId and chapterId are present
@@ -51,10 +52,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	// if it is the last chapter, get some suggested Stories
 	let suggestedStories: Story[] = []
 	if (!nextChapter) {
-		suggestedStories = await prisma.story.findMany({
-			where: { id: { not: storyId } },
-			take: 3,
-		})
+		const userId = await getUserId(request)
+		if (userId) {
+			suggestedStories = await getRecommendedStories(userId, 3) as unknown as Story[]
+		}
 	}
 
 	const previousChapter = await prisma.chapter.findFirst({
