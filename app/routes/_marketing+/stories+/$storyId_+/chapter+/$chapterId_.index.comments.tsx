@@ -80,7 +80,7 @@ function CommentForm({ parentId }: { parentId?: string }) {
   const [form, fields] = useForm({
     id: 'comment-form',
     constraint: getZodConstraint(CommentSchema),
-    lastResult: actionData?.result,
+    lastResult: actionData && 'result' in actionData ? actionData.result : undefined,
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CommentSchema })
     },
