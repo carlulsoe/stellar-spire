@@ -108,21 +108,21 @@ export function ErrorBoundary() {
 	return <GeneralErrorBoundary />
 }
 
-export const meta: MetaFunction<
-	null,
-	{ 'routes/_marketing+/stories+': typeof storiesLoader }
-> = ({ params, matches }) => {
-	const storiesMatch = matches.find(
-		(m) => m.id === 'routes/_marketing+/stories+',
-	)
-	const displayName = storiesMatch?.data?.author.name ?? params.username
-	const storyCount = storiesMatch?.data?.author.stories.length ?? 0
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	if (!data) {
+		return [{ title: `Stories | ${CONFIG.SITENAME}` }]
+	}
+	if (data.status === 'idle') {
+	const { stories } = data
+	const storyCount = stories.length
 	const storiesText = storyCount === 1 ? 'story' : 'stories'
 	return [
-		{ title: `${displayName}'s Stories | ${CONFIG.SITENAME}` },
+		{ title: `Stories | ${CONFIG.SITENAME}` },
 		{
 			name: 'description',
-			content: `Checkout ${displayName}'s ${storyCount} ${storiesText} on ${CONFIG.SITENAME}`,
+			content: `Browse through ${storyCount} ${storiesText} on ${CONFIG.SITENAME}`,
 		},
-	]
+		]
+	}
+	return []
 }
