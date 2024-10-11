@@ -1,24 +1,20 @@
 'use client'
 
-import { Bell, BellOff, Link } from 'lucide-react'
+import { type Story } from '@prisma/client'
+import { Link } from '@remix-run/react'
+import { Bell, BellOff } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#app/components/ui/button'
 import { Card } from '#app/components/ui/card'
 import CommentsRoute from '#app/routes/_marketing+/stories+/$storyId_+/chapter+/$chapterId_.index.comments'
 import { StoryReaderComponent } from './story-reader'
 
-type SuggestedStory = {
-  id: string
-  title: string
-  author: string
-}
-
 export default function StoryPage({
   storyData,
   suggestedStories
 }: {
   storyData: React.ComponentProps<typeof StoryReaderComponent>,
-  suggestedStories: SuggestedStory[]
+  suggestedStories: Story[]
 }) {
   const [isFollowing, setIsFollowing] = useState(false)
 
@@ -50,15 +46,17 @@ export default function StoryPage({
             <h2 className="text-2xl font-bold mb-4">Suggested Stories</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {suggestedStories.map((story) => (
-                <Card key={story.id} className="p-4">
-                  <h3 className="font-semibold">{story.title}</h3>
-                  <p className="text-sm text-muted-foreground">by {story.author}</p>
-                  <Link to={`/stories/${story.id}`}>
+                <Link to={`/stories/${story.id}`} key={story.id}>
+                  <Card className="p-4">
+                    <h3 className="font-semibold">{story.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-3">
+                      {story.description}
+                    </p>
                     <Button variant="link" className="mt-2 p-0">
                       Read Now
                     </Button>
-                  </Link>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
           </Card>

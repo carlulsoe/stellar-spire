@@ -7,6 +7,7 @@ import StoryPage from "#app/components/story-page.js"
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
 import CommentsRoute from "./$chapterId_.index.comments"
+import { Story } from "@prisma/client"
 
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -49,6 +50,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		where: { storyId: params.storyId, number: chapter.number + 1 },
 		select: { id: true },
 	})
+	// if it is the last chapter, get some suggested Stories
+	let suggestedStories: Story[] = []
+	if (!nextChapter) {
+		suggestedStories = await prisma.story.findMany({
+			where: { id: { not: storyId } },
+			take: 3,
+		})
+	}
 
 	const previousChapter = await prisma.chapter.findFirst({
 		where: { storyId: params.storyId, number: chapter.number - 1 },
@@ -66,15 +75,16 @@ export async function loader({ params }: LoaderFunctionArgs) {
 		chapter,
 		nextChapterId: nextChapter?.id ?? null,
 		isLiked: !!isLiked,
-		totalChapters
+		totalChapters,
+		suggestedStories,
 	})
 }
 
 export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
-
+	
 	return (
-		<StoryPage storyData={data} suggestedStories={[]}/>
+		<StoryPage storyData={data} suggestedStories={data.suggestedStories}/>
 	)
 }
 
