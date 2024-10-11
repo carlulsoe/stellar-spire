@@ -43,7 +43,7 @@ export function StoryReaderComponent(data: {
   }, [])
 
   return (
-    <div className="min-h-screen">
+    <div className="">
       <Card className="max-w-3xl mx-auto my-8 p-6 shadow-lg">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">{data.chapter.title}</h1>

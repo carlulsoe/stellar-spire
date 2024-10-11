@@ -1,9 +1,9 @@
 import { invariantResponse } from "@epic-web/invariant"
-import { type Chapter } from "@prisma/client"
 import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import { StoryReaderComponent } from "#app/components/story-reader.js"
+import StoryPage from "#app/components/story-page.js"
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
 import CommentsRoute from "./$chapterId_.index.comments"
@@ -74,20 +74,7 @@ export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
 
 	return (
-		<div>
-			<StoryReaderComponent
-				storyId={data.storyId}
-				author={data.author}
-				chapter={data.chapter}
-				nextChapterId={data.nextChapterId}
-				previousChapterId={data.previousChapterId}
-				isLiked={data.isLiked}
-				totalChapters={data.totalChapters}
-			/>
-			<div className="flex-1">
-				<CommentsRoute />
-			</div>
-		</div>
+		<StoryPage storyData={data} suggestedStories={[]}/>
 	)
 }
 
