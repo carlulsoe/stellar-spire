@@ -10,6 +10,7 @@ import {
 import { z } from 'zod'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
+import { updateStoryEmbedding } from '#app/utils/story-recommender.server.ts'
 import {
 	MAX_UPLOAD_SIZE,
 	ChapterEditorSchema,
@@ -85,7 +86,14 @@ export async function action({ request }: ActionFunctionArgs) {
 			content,
 		},
 	})
+	
+	const story = await prisma.story.findUnique({
+		where: { id: storyId },
+	})
+	invariant(story, 'story is required')
 
+	await updateStoryEmbedding(story)
+	
 	return redirect(
 		`/stories/${storyId}/chapter/${updatedChapter.id}`,
 	)

@@ -6,7 +6,7 @@ import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import StoryPage from "#app/components/story-page.js"
 import { getUserId, requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
-import { getRecommendedStories, recordUserRead } from "#app/utils/story-recommender.server.js"
+import { getRecommendedStories, recordUserRead } from "#app/utils/story-recommender.server.ts"
 
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
