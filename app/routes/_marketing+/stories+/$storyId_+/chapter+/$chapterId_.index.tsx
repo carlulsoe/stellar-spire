@@ -38,16 +38,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	// If chapter is not found, throw a 404 error
 	invariantResponse(chapter, 'Chapter not found', { status: 404 })
 
-	const isLiked = await prisma.likes.findFirst({
-		where: {
-			userId: params.userId,
-			chapterId: params.chapterId,
-		},
-	})
+
 
 	const userId = await getUserId(request)
 	if (userId) {
 		await recordUserRead(userId, storyId)
+
+	}
+
+	let isFollowed = null
+	if (userId) {
+		isFollowed = await prisma.follows.findFirst({
+			where: { followerId: userId, storyId },
+		})
 	}
 
 	const nextChapter = await prisma.chapter.findFirst({
@@ -57,7 +60,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	// if it is the last chapter, get some suggested Stories
 	let suggestedStories: Story[] = []
 	if (!nextChapter) {
-		const userId = await getUserId(request)
 		if (userId) {
 			suggestedStories = await getRecommendedStories(userId, 3) as unknown as Story[]
 		}
@@ -78,7 +80,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		previousChapterId: previousChapter?.id ?? null,
 		chapter,
 		nextChapterId: nextChapter?.id ?? null,
-		isLiked: !!isLiked,
+		isFollowed: !!isFollowed,
 		totalChapters,
 		suggestedStories,
 	})
@@ -88,32 +90,32 @@ export default function ChapterRoute() {
 	const data = useLoaderData<typeof loader>()
 	
 	return (
-		<StoryPage storyData={data} suggestedStories={data.suggestedStories as unknown as Story[]}/>
+		<StoryPage storyData={data} suggestedStories={data.suggestedStories as unknown as Story[]} isFollowed={data.isFollowed}/>
 	)
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
 	const userId = await requireUserId(request)
-	const { chapterId } = params
+	const { storyId } = params
 
-	invariantResponse(chapterId, 'Not found', { status: 404 })
+	invariantResponse(storyId, 'Not found', { status: 404 })
 
-	const existingLike = await prisma.likes.findFirst({
+	const existingFollow = await prisma.follows.findFirst({
 		where: {
-			userId,
-			chapterId,
+			followerId: userId,
+			storyId,
 		},
 	})
 
-	if (existingLike) {
-		await prisma.likes.delete({
-			where: { id: existingLike.id },
+	if (existingFollow) {
+		await prisma.follows.delete({
+			where: { id: existingFollow.id },
 		})
 	} else {
-		await prisma.likes.create({
+		await prisma.follows.create({
 			data: {
-				userId,
-				chapterId,
+				followerId: userId,
+				storyId,
 			},
 		})
 	}

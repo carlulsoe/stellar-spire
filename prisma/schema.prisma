@@ -15,22 +15,28 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   connections Connection[]
-  likes       Likes[]
   views       ChapterView[]
   password    Password?
   sessions    Session[]
   stories     Story[]
   image       UserImage?
   roles       Role[]       @relation("RoleToUser")
-  storyInteractions StoryInteraction[]
-
-  similaritiesAsUser1 UserSimilarity[] @relation("User1")
-  similaritiesAsUser2 UserSimilarity[] @relation("User2")
-
 
   Comment Comment[]
 
   UserReadHistory UserReadHistory[]
+
+  Follows Follows[]
+}
+
+model Follows {
+  id        String   @id @default(cuid())
+  followerId String
+  storyId    String
+  follower   User     @relation(fields: [followerId], references: [id], onDelete: Cascade)
+  story      Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, storyId])
 }
 
 model Story {
@@ -44,44 +50,14 @@ model Story {
   author       User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likesCount   Int              @default(0)
   embedding    String?          // SQLite doesn't have a native array type, so we'll serialize this as a JSON array
-  interactions StoryInteraction[]
 
   @@index([authorId])
   @@index([likesCount])
   images       StoryImage[]
   UserReadHistory UserReadHistory[]
+  Follows Follows[]
 }
 
-model StoryInteraction {
-  id        String   @id @default(cuid())
-  userId    String
-  storyId   String
-  type      String   // e.g., "view", "like", "rate"
-  value     Float?   // For ratings, can be null for views/likes
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([storyId])
-  @@unique([userId, storyId, type])
-}
-
-model UserSimilarity {
-  id         String   @id @default(cuid())
-  userId1    String
-  userId2    String
-  similarity Float
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  user1      User     @relation("User1", fields: [userId1], references: [id], onDelete: Cascade)
-  user2      User     @relation("User2", fields: [userId2], references: [id], onDelete: Cascade)
-
-  @@unique([userId1, userId2])
-  @@index([userId1])
-  @@index([userId2])
-}
 
 model Chapter {
   id         String   @id @default(cuid())
@@ -93,7 +69,6 @@ model Chapter {
   updatedAt  DateTime @updatedAt
   likesCount Int      @default(0)
   story      Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
-  likes      Likes[]
   views      ChapterView[]
   comments   Comment[]
 
@@ -103,18 +78,6 @@ model Chapter {
   @@index([likesCount])
 }
 
-model Likes {
-  id        String   @id @default(cuid())
-  userId    String
-  chapterId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([chapterId])
-}
 
 model UserReadHistory {
   id        String   @id @default(uuid())

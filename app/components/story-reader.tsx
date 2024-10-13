@@ -20,7 +20,6 @@ export function StoryReaderComponent(data: {
     updatedAt: string;
   }
   nextChapterId: Chapter['id'] | null
-  isLiked: boolean
   totalChapters: number
 }) {
   const [fontSize, setFontSize] = useState(16)

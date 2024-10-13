@@ -11,17 +11,33 @@ import { StoryReaderComponent } from './story-reader'
 
 export default function StoryPage({
   storyData,
-  suggestedStories
+  suggestedStories,
+  isFollowed
 }: {
   storyData: React.ComponentProps<typeof StoryReaderComponent>,
-  suggestedStories: Story[]
+  suggestedStories: Story[],
+  isFollowed: boolean | null
 }) {
-  const [isFollowing, setIsFollowing] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(isFollowed ?? false)
 
-  const handleFollowToggle = () => {
-    // TODO: Implement actual follow/unfollow logic
-    setIsFollowing(!isFollowing)
-  }
+  const handleFollowToggle = async () => {
+    try {
+        const response = await fetch(`/stories/${storyData.storyId}/chapter/${storyData.chapter.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          setIsFollowing(!isFollowing);
+        } else {
+          console.error('Failed to toggle follow status');
+        }
+      } catch (error) {
+        console.error('Error toggling follow status:', error);
+      }
+    }
+    
 
   return (
     <div className="min-h-screen bg-background">
