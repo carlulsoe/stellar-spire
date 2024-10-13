@@ -115,6 +115,7 @@ app.use(
 					MODE === 'development' ? 'ws:' : null,
 					process.env.SENTRY_DSN ? '*.sentry.io' : null,
 					"'self'",
+					'https://eu.i.posthog.com',
 				].filter(Boolean),
 				'font-src': ["'self'"],
 				'frame-src': ["'self'"],
@@ -122,6 +123,7 @@ app.use(
 				'script-src': [
 					"'strict-dynamic'",
 					"'self'",
+					"https://eu.i.posthog.com",
 					// @ts-expect-error
 					(_, res) => `'nonce-${res.locals.cspNonce}'`,
 				],

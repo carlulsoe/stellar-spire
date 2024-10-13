@@ -1,16 +1,13 @@
 import { RemixBrowser } from '@remix-run/react'
 import posthog from "posthog-js";
-import { startTransition, StrictMode, useEffect } from 'react'
+import { startTransition, StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
 
 function PosthogInit() {
-	useEffect(() => {
-		posthog.init('phc_sW1vsxNPZJJrH7PkpD9QTUMXIkENJebfXcPP9PGNyFQ', {
-			api_host: 'https://eu.i.posthog.com',
-			person_profiles: 'identified_only',
-		});
-	}, []);
-
+	posthog.init('phc_sW1vsxNPZJJrH7PkpD9QTUMXIkENJebfXcPP9PGNyFQ', {
+		api_host: 'https://eu.i.posthog.com',
+		person_profiles: 'identified_only',
+	});
 	return null;
 }
 
