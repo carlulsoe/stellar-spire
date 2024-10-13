@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { startEmbeddingModel } from './story-recommender.server'
 
 const schema = z.object({
 	NODE_ENV: z.enum(['production', 'development', 'test'] as const),
@@ -36,6 +37,7 @@ export function init() {
 
 		throw new Error('Invalid environment variables')
 	}
+	startEmbeddingModel().catch(console.error);
 }
 
 /**

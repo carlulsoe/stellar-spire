@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { promiseHash } from 'remix-utils/promise'
 import { prisma } from '#app/utils/db.server.ts'
 import { MOCK_CODE_GITHUB } from '#app/utils/providers/constants'
+import { updateStoryEmbedding } from '#app/utils/story-recommender.server.ts'
 import {
 	cleanupDb,
 	createPassword,
@@ -350,6 +351,9 @@ async function seed() {
 			}
 		}
 	})
+	for (const story of await prisma.story.findMany()) {
+		await updateStoryEmbedding(story)
+	}
 
 	console.timeEnd(`🌱 Database has been seeded`)
 }

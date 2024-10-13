@@ -6,7 +6,7 @@ import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import StoryPage from "#app/components/story-page.js"
 import { getUserId, requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from "#app/utils/db.server.js"
-import { getRecommendedStories } from "#app/utils/story-recommender.server.js"
+import { getRecommendedStories, recordUserRead } from "#app/utils/story-recommender.server.js"
 
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -44,6 +44,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			chapterId: params.chapterId,
 		},
 	})
+
+	const userId = await getUserId(request)
+	if (userId) {
+		await recordUserRead(userId, storyId)
+	}
 
 	const nextChapter = await prisma.chapter.findFirst({
 		where: { storyId: params.storyId, number: chapter.number + 1 },
