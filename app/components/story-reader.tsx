@@ -1,5 +1,3 @@
-'use client'
-
 import { type Chapter, type Story } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'

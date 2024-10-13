@@ -1,5 +1,3 @@
-'use client'
-
 import { type Story } from '@prisma/client'
 import { Link } from '@remix-run/react'
 import { Bell, BellOff } from 'lucide-react'

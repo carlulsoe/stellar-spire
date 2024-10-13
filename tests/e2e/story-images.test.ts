@@ -117,7 +117,7 @@ function createStory() {
 	return {
 		title: faker.lorem.words(3),
 		description: faker.lorem.paragraphs(3),
-	} satisfies Omit<Story, 'id' | 'createdAt' | 'updatedAt' | 'type' | 'authorId' | 'likesCount'>
+	} satisfies Omit<Story, 'id' | 'createdAt' | 'updatedAt' | 'type' | 'authorId' | 'likesCount' | 'embedding'>
 }
 function createStoryWithImage() {
 	return {
@@ -133,7 +133,7 @@ function createStoryWithImage() {
 		},
 	} satisfies Omit<
 		Story,
-		'id' | 'createdAt' | 'updatedAt' | 'type' | 'authorId' | 'likesCount'
+		'id' | 'createdAt' | 'updatedAt' | 'type' | 'authorId' | 'likesCount' | 'embedding'
 	> & {
 		images: { create: Pick<StoryImage, 'altText' | 'blob' | 'contentType'> }
 	}
