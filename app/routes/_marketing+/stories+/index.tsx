@@ -6,8 +6,7 @@ import { ErrorList } from '#app/components/forms.js'
 import { SearchBar } from '#app/components/search-bar.js'
 import { CONFIG } from '#app/config.ts'
 import { prisma } from '#app/utils/db.server.js'
-import { getUserImgSrc, useDelayedIsPending , cn } from '#app/utils/misc.js'
-import { type loader as storiesLoader } from '../../users+/$username_+/stories.tsx'
+import { useDelayedIsPending , cn } from '#app/utils/misc.js'
 
 const StorySearchResultSchema = z.object({
 	id: z.string(),

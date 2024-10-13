@@ -60,7 +60,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	})
 
 	invariantResponse(story, 'Not found', { status: 404 })
-
+	console.log(story.coverImage)
 	const date = new Date(story.updatedAt)
 	const timeAgo = formatDistanceToNow(date)
 

@@ -53,7 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		}).transform(async ({ coverImage, ...data }) => {
 			return {
 				...data,
-				coverImageUpdate: coverImage && imageHasId(coverImage) ? coverImage : undefined,
+				coverImageUpdate: coverImage && imageHasFile(coverImage) ? coverImage : undefined,
 			}
 		}),
 		async: true,
@@ -72,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		description,
 		coverImageUpdate,
 	} = submission.value
-
+	console.log(coverImageUpdate)
 
 	const updatedStory = await prisma.story.upsert({
 		select: { id: true, author: { select: { username: true } } },
