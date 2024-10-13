@@ -161,8 +161,12 @@ async function addDiversity(
 }
 
 export async function recordUserRead(userId: string, storyId: string) {
-	await prisma.userReadHistory.create({
-		data: {
+	await prisma.userReadHistory.upsert({
+		where: { userId_storyId: { userId, storyId } },
+		update: {
+			readTime: new Date(),
+		},
+		create: {
 			userId,
 			storyId,
 			readTime: new Date(),
