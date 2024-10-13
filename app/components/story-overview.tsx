@@ -4,6 +4,7 @@ import { Clock, User, BookOpen, Star } from 'lucide-react'
 import { Badge } from "#app/components/ui/badge"
 import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
+import { getStoryImgSrc } from '#app/utils/misc.js'
 
 
 export function StoryOverviewComponent({ story, isAuthor }: {
@@ -36,14 +37,14 @@ export function StoryOverviewComponent({ story, isAuthor }: {
   estimatedReadTime: number;
   isAuthor: boolean;
 }) {
-  console.log(story.coverImage)
+
   return (
     <div className="bg-background flex flex-col items-center justify-start p-4">
       <Card className="w-full max-w-3xl mb-8">
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6">
             <img
-              src={story.coverImage?.id ?? ''}
+              src={getStoryImgSrc(story.coverImage.id)}
               alt={`Cover of ${story.title}`}
               width={300}
               height={400}

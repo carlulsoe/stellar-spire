@@ -98,14 +98,14 @@ export async function action({ request }: ActionFunctionArgs) {
 				? {
 						upsert: {
 							create: {
-								altText: coverImageUpdate.altText,
-								contentType: coverImageUpdate.file?.type,
+								altText: coverImageUpdate.altText ?? '',
+								contentType: coverImageUpdate.file?.type ?? 'application/octet-stream',
 								blob: coverImageUpdate.file
 									? Buffer.from(await coverImageUpdate.file.arrayBuffer())
-									: undefined,
+									: Buffer.alloc(0),
 							},
 							update: {
-								altText: coverImageUpdate.altText,
+								altText: coverImageUpdate.altText ?? '',
 								...(coverImageUpdate.file
 									? {
 											contentType: coverImageUpdate.file.type,
