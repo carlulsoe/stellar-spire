@@ -21,7 +21,7 @@ import { Icon } from '#app/components/ui/icon.tsx'
 import { Label } from '#app/components/ui/label.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { Textarea } from '#app/components/ui/textarea.tsx'
-import { cn, getNoteImgSrc, useIsPending } from '#app/utils/misc.tsx'
+import { cn, getStoryImgSrc, useIsPending } from '#app/utils/misc.tsx'
 import { type action } from './__story-editor.server'
 
 const titleMinLength = 1
@@ -48,7 +48,7 @@ export const StoryEditorSchema = z.object({
 	id: z.string().optional(),
 	title: z.string().min(titleMinLength).max(titleMaxLength),
 	description: z.string().min(contentMinLength).max(contentMaxLength),
-	images: z.array(ImageFieldsetSchema).max(5).optional(),
+	coverImage: ImageFieldsetSchema.optional(),
 })
 
 export function StoryEditor({
@@ -56,7 +56,7 @@ export function StoryEditor({
 }: {
 	story?: SerializeFrom<
 		Pick<Story, 'id' | 'title' | 'description'> & {
-			images: Array<Pick<StoryImage, 'id' | 'altText'>>
+			coverImage?: Pick<StoryImage, 'id' | 'altText'>
 		}
 	>
 }) {
@@ -72,14 +72,13 @@ export function StoryEditor({
 		},
 		defaultValue: {
 			...story,
-			images: story?.images ?? [{}],
+			coverImage: story?.coverImage ?? { id: '', altText: null },
 		},
 		shouldRevalidate: 'onBlur',
 	})
-	const imageList = fields.images.getFieldList()
 
 	return (
-		<div className="absolute inset-0">
+		<div className="">
 			<FormProvider context={form.context}>
 				<Form
 					method="POST"
@@ -111,44 +110,13 @@ export function StoryEditor({
 							errors={fields.description.errors}
 						/>
 						<div>
-							<Label>Images</Label>
-							<ul className="flex flex-col gap-4">
-								{imageList.map((image, index) => {
-									console.log('image.key', image.key)
-									return (
-										<li
-											key={image.key}
-											className="relative border-b-2 border-muted-foreground"
-										>
-											<button
-												className="absolute right-0 top-0 text-foreground-destructive"
-												{...form.remove.getButtonProps({
-													name: fields.images.name,
-													index,
-												})}
-											>
-												<span aria-hidden>
-													<Icon name="cross-1" />
-												</span>{' '}
-												<span className="sr-only">
-													Remove image {index + 1}
-												</span>
-											</button>
-											<ImageChooser meta={image} />
-										</li>
-									)
-								})}
-							</ul>
+							<Label>Cover Image</Label>
+							<div className="relative">
+								{fields.coverImage && (
+									<ImageChooser meta={fields.coverImage as FieldMetadata<ImageFieldset>} />
+								)}
+							</div>
 						</div>
-						<Button
-							className="mt-3"
-							{...form.insert.getButtonProps({ name: fields.images.name })}
-						>
-							<span aria-hidden>
-								<Icon name="plus">Image</Icon>
-							</span>{' '}
-							<span className="sr-only">Add image</span>
-						</Button>
 					</div>
 					<ErrorList id={form.errorId} errors={form.errors} />
 				</Form>
@@ -174,7 +142,7 @@ function ImageChooser({ meta }: { meta: FieldMetadata<ImageFieldset> }) {
 	const fields = meta.getFieldset()
 	const existingImage = Boolean(fields.id.initialValue)
 	const [previewImage, setPreviewImage] = useState<string | null>(
-		fields.id.initialValue ? getNoteImgSrc(fields.id.initialValue) : null,
+		fields.id.initialValue ? getStoryImgSrc(fields.id.initialValue) : null,
 	)
 	const [altText, setAltText] = useState(fields.altText.initialValue ?? '')
 

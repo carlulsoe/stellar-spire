@@ -9,8 +9,8 @@ export function getUserImgSrc(imageId?: string | null) {
 	return imageId ? `/resources/user-images/${imageId}` : '/img/user.png'
 }
 
-export function getNoteImgSrc(imageId: string) {
-	return `/resources/note-images/${imageId}`
+export function getStoryImgSrc(imageId: string) {
+	return `/resources/story-images/${imageId}`
 }
 
 export function getErrorMessage(error: unknown) {

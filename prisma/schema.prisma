@@ -53,7 +53,7 @@ model Story {
 
   @@index([authorId])
   @@index([likesCount])
-  images       StoryImage[]
+  coverImage   StoryImage?
   UserReadHistory UserReadHistory[]
   Follows Follows[]
 }
@@ -132,7 +132,7 @@ model StoryImage {
   blob        Bytes
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  storyId     String
+  storyId     String   @unique
   story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
   @@index([storyId])

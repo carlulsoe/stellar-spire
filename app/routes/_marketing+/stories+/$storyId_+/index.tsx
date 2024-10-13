@@ -26,10 +26,10 @@ import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { requireUserWithPermission } from '#app/utils/permissions.server.ts'
+import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.js'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
 import { type loader as storiesLoader } from '../../../users+/$username_+/stories.tsx'
-import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.js'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const story = await prisma.story.findUnique({
@@ -41,7 +41,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 			authorId: true,
 			author: { select: { username: true } },
 			updatedAt: true,
-			images: {
+			coverImage: {
 				select: {
 					id: true,
 					altText: true,
@@ -124,7 +124,10 @@ export default function StoryRoute() {
 	return (
 		<div className="flex flex-col px-10">
 			<StoryOverviewComponent
-				story={data.story}
+				story={{
+					...data.story,
+					coverImage: data.story.coverImage ?? { id: '', altText: null },
+				}}
 				timeAgo={data.timeAgo}
 				estimatedReadTime={data.story.chapters.reduce((total, chapter) => total + ReadingTimeEstimator.estimate(chapter.content).minutes, 0)}
 				isAuthor={isAuthor}

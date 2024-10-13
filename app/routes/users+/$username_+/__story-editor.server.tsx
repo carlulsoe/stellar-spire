@@ -50,38 +50,10 @@ export async function action({ request }: ActionFunctionArgs) {
 					message: 'Story not found',
 				})
 			}
-		}).transform(async ({ images = [], ...data }) => {
+		}).transform(async ({ coverImage, ...data }) => {
 			return {
 				...data,
-				imageUpdates: await Promise.all(
-					images.filter(imageHasId).map(async (i) => {
-						if (imageHasFile(i)) {
-							return {
-								id: i.id,
-								altText: i.altText,
-								contentType: i.file.type,
-								blob: Buffer.from(await i.file.arrayBuffer()),
-							}
-						} else {
-							return {
-								id: i.id,
-								altText: i.altText,
-							}
-						}
-					}),
-				),
-				newImages: await Promise.all(
-					images
-						.filter(imageHasFile)
-						.filter((i) => !i.id)
-						.map(async (image) => {
-							return {
-								altText: image.altText,
-								contentType: image.file.type,
-								blob: Buffer.from(await image.file.arrayBuffer()),
-							}
-						}),
-				),
+				coverImageUpdate: coverImage && imageHasId(coverImage) ? coverImage : undefined,
 			}
 		}),
 		async: true,
@@ -98,9 +70,9 @@ export async function action({ request }: ActionFunctionArgs) {
 		id: storyId,
 		title,
 		description,
-		imageUpdates = [],
-		newImages = [],
+		coverImageUpdate,
 	} = submission.value
+
 
 	const updatedStory = await prisma.story.upsert({
 		select: { id: true, author: { select: { username: true } } },
@@ -109,19 +81,41 @@ export async function action({ request }: ActionFunctionArgs) {
 			authorId: userId,
 			title,
 			description,
-			images: { create: newImages },
+			coverImage: coverImageUpdate && imageHasFile(coverImageUpdate)
+				? {
+						create: {
+							altText: coverImageUpdate.altText,
+							contentType: coverImageUpdate.file.type,
+							blob: Buffer.from(await coverImageUpdate.file.arrayBuffer()),
+						},
+					}
+				: undefined,
 		},
 		update: {
 			title,
 			description,
-			images: {
-				deleteMany: { id: { notIn: imageUpdates.map((i) => i.id) } },
-				updateMany: imageUpdates.map((updates) => ({
-					where: { id: updates.id },
-					data: { ...updates, id: updates.blob ? cuid() : updates.id },
-				})),
-				create: newImages,
-			},
+			coverImage: coverImageUpdate
+				? {
+						upsert: {
+							create: {
+								altText: coverImageUpdate.altText,
+								contentType: coverImageUpdate.file?.type,
+								blob: coverImageUpdate.file
+									? Buffer.from(await coverImageUpdate.file.arrayBuffer())
+									: undefined,
+							},
+							update: {
+								altText: coverImageUpdate.altText,
+								...(coverImageUpdate.file
+									? {
+											contentType: coverImageUpdate.file.type,
+											blob: Buffer.from(await coverImageUpdate.file.arrayBuffer()),
+										}
+									: {}),
+							},
+						},
+					}
+				: undefined,
 		},
 	})
 

@@ -14,17 +14,16 @@ export function StoryOverviewComponent({ story, isAuthor }: {
       username: string;
     };
     description: string;
-    coverImage?: string;
     genre?: string;
     totalChapters?: number;
     estimatedReadTime?: number;
     rating?: number;
     reviews?: number;
     updatedAt: string;
-    images: Array<{
+    coverImage: {
       id: string;
       altText: string | null;
-    }>;
+    };
     chapters: Array<{
       id: string;
       title: string;
@@ -37,14 +36,14 @@ export function StoryOverviewComponent({ story, isAuthor }: {
   estimatedReadTime: number;
   isAuthor: boolean;
 }) {
-
+  console.log(story.coverImage)
   return (
     <div className="bg-background flex flex-col items-center justify-start p-4">
       <Card className="w-full max-w-3xl mb-8">
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6">
             <img
-              src={story.coverImage ?? ''}
+              src={story.coverImage?.id ?? ''}
               alt={`Cover of ${story.title}`}
               width={300}
               height={400}

@@ -15,7 +15,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 			id: true,
 			title: true,
 			description: true,
-			images: {
+			coverImage: {
 				select: {
 					id: true,
 					altText: true,
@@ -34,7 +34,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 export default function StoryEdit() {
 	const data = useLoaderData<typeof loader>()
 
-	return <StoryEditor story={data.story} />
+	return <StoryEditor story={{
+		...data.story,
+		coverImage: data.story.coverImage ?? { id: '', altText: null },
+	}} />
 }
 
 export function ErrorBoundary() {

@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			},
 			stories: {
 				include: {
-					images: {
+					coverImage: {
 						select: {
 							id: true,
 							createdAt: true,
@@ -46,16 +46,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 			...user,
 			image: user.image
 				? {
-						...user.image,
-						url: `${domain}/resources/user-images/${user.image.id}`,
-					}
+					...user.image,
+					url: `${domain}/resources/user-images/${user.image.id}`,
+				}
 				: null,
 			stories: user.stories.map((story) => ({
 				...story,
-				images: story.images.map((image) => ({
-					...image,
-					url: `${domain}/resources/story-images/${image.id}`,
-				})),
+				coverImage: story.coverImage
+					? {
+							...story.coverImage,
+							url: `${domain}/resources/story-images/${story.coverImage.id}`,
+						}
+					: null,
 			})),
 		},
 	})
