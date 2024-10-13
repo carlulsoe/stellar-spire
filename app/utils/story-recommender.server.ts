@@ -1,8 +1,7 @@
 import { invariant } from '@epic-web/invariant'
 import { type Story, type Chapter } from '@prisma/client'
-import { type ActionFunctionArgs, json } from '@remix-run/node'
 import { pipeline, type FeatureExtractionPipeline } from '@xenova/transformers'
-import * as computeCosineSimilarity from 'compute-cosine-similarity'
+import computeCosineSimilarity from 'compute-cosine-similarity'
 import { prisma } from '#app/utils/db.server.ts'
 
 type Vector = number[]
