@@ -30,11 +30,28 @@ export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const userId = await getUserId(request)
-	const recommendedStories = userId ? await getRecommendedStories(userId, 10) : []
+	let recommendedStories: any[] = []
 
-	invariantResponse(recommendedStories, 'Recommended stories not found', {
-		status: 404,
-	})
+	if (userId) {
+		recommendedStories = await getRecommendedStories(userId, 10)
+		
+		if (recommendedStories.length > 0) {
+			const storiesWithAuthors = await prisma.story.findMany({
+				where: { id: { in: recommendedStories.map(story => story.id) } },
+				select: {
+					id: true,
+					author: { select: { name: true } }
+				}
+			})
+
+			const authorMap = new Map(storiesWithAuthors.map(story => [story.id, story.author.name]))
+
+			recommendedStories = recommendedStories.map(story => ({
+				...story,
+				authorName: authorMap.get(story.id) || ''
+			}))
+		}
+	}
 
 	const popularStories = await prisma.story.findMany({
 		select: {
@@ -108,7 +125,7 @@ export default function Index() {
 											<CardHeader>
 												<CardTitle>{story.title}</CardTitle>
 												<CardDescription>
-													by {story.author.name}
+													by {story.authorName}
 												</CardDescription>
 											</CardHeader>
 											<CardContent className="max-h-28 min-h-28">
