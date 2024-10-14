@@ -61,8 +61,8 @@ export default function StoryPage({
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {suggestedStories.map((story) => (
                 <Link to={`/stories/${story.id}`} key={story.id}>
-                  <Card className="p-4">
-                    <h3 className="font-semibold">{story.title}</h3>
+                  <Card className="p-4 hover:bg-accent hover:text-accent-foreground transition-colors duration-300 h-full">
+                    <h3 className="font-semibold line-clamp-2 h-12">{story.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-3">
                       {story.description}
                     </p>
