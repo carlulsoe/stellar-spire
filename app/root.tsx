@@ -249,30 +249,30 @@ function App() {
 				<div className="container flex justify-between pb-5">
 					<Logo />
 					<div className="flex flex-wrap justify-center gap-4 text-center text-sm text-muted-foreground">
-						<a
-							href="/about"
+						<Link
+							to="/about"
 							className="text-sm text-muted-foreground hover:underline"
 						>
 							About
-						</a>
-						<a
-							href="/privacy"
+						</Link>
+						<Link
+							to="/privacy"
 							className="text-sm text-muted-foreground hover:underline"
 						>
 							Privacy
-						</a>
-						<a
-							href="/support"
+						</Link>
+						<Link
+							to="/support"
 							className="text-sm text-muted-foreground hover:underline"
 						>
 							Support
-						</a>
-						<a
-							href="/tos"
+						</Link>
+						<Link
+							to="/tos"
 							className="text-sm text-muted-foreground hover:underline"
 						>
 							Terms of Service
-						</a>
+						</Link>
 					</div>
 					<ThemeSwitch userPreference={data.requestInfo.userPrefs.theme} />
 				</div>
