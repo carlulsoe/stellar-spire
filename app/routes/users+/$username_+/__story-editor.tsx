@@ -14,17 +14,16 @@ import { Form, useActionData } from '@remix-run/react'
 import { useState } from 'react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
-import { floatingToolbarClassName } from '#app/components/floating-toolbar.tsx'
 import { ErrorList, Field, TextareaField } from '#app/components/forms.tsx'
 import { Button } from '#app/components/ui/button.tsx'
+import { CardContent, CardHeader, CardTitle , Card } from '#app/components/ui/card.js'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { Label } from '#app/components/ui/label.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { Textarea } from '#app/components/ui/textarea.tsx'
 import { cn, getStoryImgSrc, useIsPending } from '#app/utils/misc.tsx'
 import { type action } from './__story-editor.server'
-import { CardContent, CardHeader, CardTitle } from '#app/components/ui/card.js'
-import { Card } from '#app/components/ui/card.js'
+
 
 const titleMinLength = 1
 const titleMaxLength = 100
