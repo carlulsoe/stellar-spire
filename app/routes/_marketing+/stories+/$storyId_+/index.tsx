@@ -60,7 +60,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	})
 
 	invariantResponse(story, 'Not found', { status: 404 })
-	console.log(story.coverImage)
+	
 	const date = new Date(story.updatedAt)
 	const timeAgo = formatDistanceToNow(date)
 
@@ -126,7 +126,7 @@ export default function StoryRoute() {
 			<StoryOverviewComponent
 				story={{
 					...data.story,
-					coverImage: data.story.coverImage ?? { id: '', altText: null },
+					coverImage: data.story.coverImage,
 				}}
 				timeAgo={data.timeAgo}
 				estimatedReadTime={data.story.chapters.reduce((total, chapter) => total + ReadingTimeEstimator.estimate(chapter.content).minutes, 0)}

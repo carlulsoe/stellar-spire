@@ -2,7 +2,10 @@ import { faker } from '@faker-js/faker'
 import { promiseHash } from 'remix-utils/promise'
 import { prisma } from '#app/utils/db.server.ts'
 import { MOCK_CODE_GITHUB } from '#app/utils/providers/constants'
-import { updateStoryEmbedding, startEmbeddingModel } from '#app/utils/story-recommender.server.ts'
+import {
+	updateStoryEmbedding,
+	startEmbeddingModel,
+} from '#app/utils/story-recommender.server.ts'
 import {
 	cleanupDb,
 	createPassword,
@@ -77,14 +80,14 @@ async function seed() {
 					roles: { connect: { name: 'user' } },
 					stories: {
 						create: Array.from({
-							length: faker.number.int({ min: 1, max: 3 }),
+							length: faker.number.int({ min: 1, max: 10 }),
 						}).map(() => ({
 							title: faker.lorem.sentence(),
 							description: faker.lorem.paragraphs(1),
 							chapters: {
 								create: {
 									title: faker.lorem.sentence(),
-									content: faker.lorem.paragraphs(4),
+									content: faker.lorem.paragraphs(10),
 								},
 							},
 						})),
@@ -98,7 +101,7 @@ async function seed() {
 	}
 	console.timeEnd(`👤 Created ${totalUsers} users...`)
 
-	console.time(`🐨 Created admin user "kody"`)
+	console.time(`🐨 Created admin user "carlulsoe"`)
 
 	const kodyImages = await promiseHash({
 		kodyUser: img({ filepath: './tests/fixtures/images/user/kody.png' }),
@@ -138,11 +141,10 @@ async function seed() {
 	await prisma.user.create({
 		select: { id: true },
 		data: {
-			email: 'kody@kcd.dev',
-			username: 'kody',
-			name: 'Kody',
-			image: { create: kodyImages.kodyUser },
-			password: { create: createPassword('kodylovesyou') },
+			email: 'carlulsoe@gmail.com',
+			username: 'carlulsoe',
+			name: 'Carl Ulsoe',
+			password: { create: createPassword('password') },
 			connections: {
 				create: { providerName: 'github', providerId: githubUser.profile.id },
 			},
@@ -303,7 +305,7 @@ async function seed() {
 			},
 		},
 	})
-	console.timeEnd(`🐨 Created admin user "kody"`)
+	console.timeEnd(`🐨 Created admin user "carlulsoe"`)
 
 	await prisma.user.create({
 		select: { id: true },
@@ -315,13 +317,15 @@ async function seed() {
 			password: { create: createPassword('ilovewriting') },
 			roles: { connect: [{ name: 'user' }] },
 			stories: {
-				create: [{
-					title: 'The Enchanted Forest',
-					description: 'A magical forest that is home to all kinds of creatures.',
-					chapters: {
-						create: {
-							title: 'The Enchanted Forest',
-							content: `Deep in the heart of an ancient woodland, where sunlight filtered through layers of emerald leaves, there stood a tree unlike any other. Its bark shimmered with an otherworldly glow, and its branches seemed to whisper secrets to those who listened closely.
+				create: [
+					{
+						title: 'The Enchanted Forest',
+						description:
+							'A magical forest that is home to all kinds of creatures.',
+						chapters: {
+							create: {
+								title: 'The Enchanted Forest',
+								content: `Deep in the heart of an ancient woodland, where sunlight filtered through layers of emerald leaves, there stood a tree unlike any other. Its bark shimmered with an otherworldly glow, and its branches seemed to whisper secrets to those who listened closely.
 
     Lily, a curious young explorer with wild curls and bright eyes, had heard tales of this magical forest since she was a child. Now, at the age of twelve, she had finally convinced her parents to let her embark on a camping trip with her best friend, Max.
 
@@ -344,12 +348,13 @@ async function seed() {
     As the night deepened around them, Lily and Max knew their adventure was just beginning. The Enchanted Forest had chosen them, and with that choice came a responsibility they were only beginning to understand.
 
     The tree's glow pulsed gently, like a heartbeat, welcoming them home to a world of magic they had only dreamed of until now."
-`
+`,
+							},
 						},
 					},
-				}]
-			}
-		}
+				],
+			},
+		},
 	})
 	await startEmbeddingModel()
 	for (const story of await prisma.story.findMany()) {

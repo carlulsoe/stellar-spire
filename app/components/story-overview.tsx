@@ -5,6 +5,8 @@ import { Badge } from "#app/components/ui/badge"
 import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
 import { getStoryImgSrc } from '#app/utils/misc.js'
+import { Icon } from './ui/icon'
+import { IconName } from './ui/icons/name';
 
 
 export function StoryOverviewComponent({ story, isAuthor }: {
@@ -21,7 +23,7 @@ export function StoryOverviewComponent({ story, isAuthor }: {
     rating?: number;
     reviews?: number;
     updatedAt: string;
-    coverImage: {
+    coverImage?: {
       id: string;
       altText: string | null;
     };
@@ -43,6 +45,7 @@ export function StoryOverviewComponent({ story, isAuthor }: {
       <Card className="w-full max-w-3xl mb-8">
         <CardHeader>
           <div className="flex flex-col md:flex-row gap-6">
+            {story.coverImage ? (
             <img
               src={getStoryImgSrc(story.coverImage.id)}
               alt={`Cover of ${story.title}`}
@@ -50,6 +53,9 @@ export function StoryOverviewComponent({ story, isAuthor }: {
               height={400}
               className="rounded-lg object-cover"
             />
+            ) : (
+                <Icon name="default-book-cover" className="w-300 h-400" />
+            )}
             <div className="flex flex-col justify-between flex-grow">
               <div>
                 <CardTitle className="text-3xl mb-2">{story.title}</CardTitle>
