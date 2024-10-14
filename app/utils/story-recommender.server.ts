@@ -172,6 +172,13 @@ export async function recordUserRead(userId: string, storyId: string) {
 			readTime: new Date(),
 		},
 	})
+	const viewCount = await prisma.userReadHistory.count({
+		where: { storyId },
+	});
+	await prisma.story.update({
+		where: { id: storyId },
+		data: { views: viewCount },
+	});
 }
 
 // Embedding model initialization

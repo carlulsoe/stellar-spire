@@ -48,11 +48,11 @@ model Story {
   updatedAt    DateTime         @updatedAt
   chapters     Chapter[]
   author       User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likesCount   Int              @default(0)
+  views        Int              @default(0)
   embedding    String?          // SQLite doesn't have a native array type, so we'll serialize this as a JSON array
 
   @@index([authorId])
-  @@index([likesCount])
+  @@index([views])
   coverImage   StoryImage?
   UserReadHistory UserReadHistory[]
   Follows Follows[]

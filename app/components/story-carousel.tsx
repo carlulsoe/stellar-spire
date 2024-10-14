@@ -34,7 +34,7 @@ export function StoryCarousel({ stories, title }: { stories: any[], title: strin
 							>
 								<Card className="w-full">
 									<CardHeader>
-										<CardTitle>{story.title}</CardTitle>
+										<CardTitle className="h-12 line-clamp-3">{story.title}</CardTitle>
 										<CardDescription>
 											by {story.author.name}
 										</CardDescription>
