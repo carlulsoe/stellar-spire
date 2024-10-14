@@ -60,7 +60,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   invariant(chapterId, "chapterId is required")
 
   const formData = await request.formData()
-  const submission = await parseWithZod(formData, {
+  const submission = parseWithZod(formData, {
     schema: CommentSchema,
   })
 
@@ -82,5 +82,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     },
   })
 
-  return json({ comment })
+  return redirect(`/stories/${params.storyId}/chapter/${chapterId}`)
 }

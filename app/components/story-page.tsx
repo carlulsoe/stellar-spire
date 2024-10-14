@@ -4,7 +4,7 @@ import { Bell, BellOff } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#app/components/ui/button'
 import { Card } from '#app/components/ui/card'
-import CommentsRoute from '#app/routes/_marketing+/stories+/$storyId_+/chapter+/$chapterId_.index.comments'
+//import CommentsRoute from '#app/routes/_marketing+/stories+/$storyId_+/chapter+/$chapterId_.index.comments'
 import { StoryReaderComponent } from './story-reader'
 
 export default function StoryPage({
@@ -77,9 +77,9 @@ export default function StoryPage({
         </div>
       )}
 
-      <div className="max-w-3xl mx-auto my-8">
+{/*       <div className="max-w-3xl mx-auto my-8">
         <CommentsRoute />
-      </div>
+      </div> */}
     </div>
   )
 }

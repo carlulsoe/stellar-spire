@@ -1,4 +1,4 @@
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
+import { getFormProps, getInputProps, getTextareaProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
@@ -10,6 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "#app/components/ui/avatar"
 import { Button } from "#app/components/ui/button"
 import { Textarea } from "#app/components/ui/textarea"
 import { type action, type loader } from './$chapterId_.index.comments.server'
+import { TextareaProps } from '../../../../../components/ui/textarea';
+import { TextareaField } from '#app/components/forms.js'
 
 type Comment = {
   id: string
@@ -89,9 +91,10 @@ function CommentForm({ parentId }: { parentId?: string }) {
 
   return (
     <Form method="post" className="mt-4" {...getFormProps(form)}>
-      <Textarea
-        {...getInputProps(fields.content, { type: 'text' })}
-        placeholder="What are your thoughts on the chapter?"
+      <TextareaField
+        labelProps={{ }}
+        textareaProps={{...getTextareaProps(fields.content)}}
+        errors={fields.content.errors}
         className="min-h-[100px]"
       />
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
