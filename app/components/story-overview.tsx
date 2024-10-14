@@ -6,7 +6,6 @@ import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
 import { getStoryImgSrc } from '#app/utils/misc.js'
 import { Icon } from './ui/icon'
-import { IconName } from './ui/icons/name';
 
 
 export function StoryOverviewComponent({ story, isAuthor }: {
@@ -23,10 +22,10 @@ export function StoryOverviewComponent({ story, isAuthor }: {
     rating?: number;
     reviews?: number;
     updatedAt: string;
-    coverImage?: {
+    coverImage: {
       id: string;
       altText: string | null;
-    };
+    } | null;
     chapters: Array<{
       id: string;
       title: string;
