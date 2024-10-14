@@ -23,6 +23,8 @@ import { StatusButton } from '#app/components/ui/status-button.tsx'
 import { Textarea } from '#app/components/ui/textarea.tsx'
 import { cn, getStoryImgSrc, useIsPending } from '#app/utils/misc.tsx'
 import { type action } from './__story-editor.server'
+import { CardContent, CardHeader, CardTitle } from '#app/components/ui/card.js'
+import { Card } from '#app/components/ui/card.js'
 
 const titleMinLength = 1
 const titleMaxLength = 100
@@ -78,11 +80,16 @@ export function StoryEditor({
 	})
 
 	return (
-		<div className="">
+		<div className="container mx-auto py-10">
+		<Card className="w-full max-w-2xl mx-auto">
+		  <CardHeader>
+			<CardTitle className="text-3xl font-bold text-center">Create Your Story</CardTitle>
+		  </CardHeader>
+		  <CardContent>
 			<FormProvider context={form.context}>
 				<Form
 					method="POST"
-					className="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden px-10 pb-28 pt-12"
+					className="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden px-5"
 					{...getFormProps(form)}
 					encType="multipart/form-data"
 				>
@@ -101,6 +108,7 @@ export function StoryEditor({
 								...getInputProps(fields.title, { type: 'text' }),
 							}}
 							errors={fields.title.errors}
+							placeholder="Enter your story title"
 						/>
 						<TextareaField
 							labelProps={{ children: 'Description' }}
@@ -108,6 +116,8 @@ export function StoryEditor({
 								...getTextareaProps(fields.description),
 							}}
 							errors={fields.description.errors}
+							className="mb-4"
+							placeholder="Write a brief description of your story"
 						/>
 						<div>
 							<Label>Cover Image</Label>
@@ -120,7 +130,7 @@ export function StoryEditor({
 					</div>
 					<ErrorList id={form.errorId} errors={form.errors} />
 				</Form>
-				<div className={floatingToolbarClassName}>
+				<div className="flex justify-between">
 					<Button variant="destructive" {...form.reset.getButtonProps()}>
 						Reset
 					</Button>
@@ -134,6 +144,8 @@ export function StoryEditor({
 					</StatusButton>
 				</div>
 			</FormProvider>
+			</CardContent>
+			</Card>
 		</div>
 	)
 }

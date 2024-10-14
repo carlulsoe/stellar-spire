@@ -39,11 +39,13 @@ export function Field({
 	inputProps,
 	errors,
 	className,
+	placeholder,
 }: {
 	labelProps: React.LabelHTMLAttributes<HTMLLabelElement>
 	inputProps: React.InputHTMLAttributes<HTMLInputElement>
 	errors?: ListOfErrors
 	className?: string
+	placeholder?: string
 }) {
 	const fallbackId = useId()
 	const id = inputProps.id ?? fallbackId
@@ -56,6 +58,7 @@ export function Field({
 				aria-invalid={errorId ? true : undefined}
 				aria-describedby={errorId}
 				{...inputProps}
+				placeholder={placeholder}
 			/>
 			<div className="min-h-[32px] px-4 pb-3 pt-1">
 				{errorId ? <ErrorList id={errorId} errors={errors} /> : null}
@@ -113,11 +116,13 @@ export function TextareaField({
 	textareaProps,
 	errors,
 	className,
+	placeholder,
 }: {
 	labelProps: React.LabelHTMLAttributes<HTMLLabelElement>
 	textareaProps: React.TextareaHTMLAttributes<HTMLTextAreaElement>
 	errors?: ListOfErrors
 	className?: string
+	placeholder?: string
 }) {
 	const fallbackId = useId()
 	const id = textareaProps.id ?? textareaProps.name ?? fallbackId
@@ -130,6 +135,7 @@ export function TextareaField({
 				aria-invalid={errorId ? true : undefined}
 				aria-describedby={errorId}
 				{...textareaProps}
+				placeholder={placeholder}
 			/>
 			<div className="min-h-[32px] px-4 pb-3 pt-1">
 				{errorId ? <ErrorList id={errorId} errors={errors} /> : null}
