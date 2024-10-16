@@ -41,7 +41,7 @@ export default function StoryPage({
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto my-8">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold">{storyData.chapter.title}</h1>
+          <h1 className="text-3xl font-bold">{storyData.storyTitle}</h1>
           <Button
             variant="outline"
             size="sm"

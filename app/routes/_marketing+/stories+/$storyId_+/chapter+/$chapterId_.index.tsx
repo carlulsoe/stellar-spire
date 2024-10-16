@@ -29,7 +29,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 						select: {
 							username: true
 						}
-					}
+					},
+					title: true,
 				}
 			}
 		},
@@ -76,6 +77,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 	return json({
 		storyId,
+		storyTitle: chapter.story.title,
 		author: chapter.story.author.username,
 		previousChapterId: previousChapter?.id ?? null,
 		chapter,

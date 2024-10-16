@@ -8,6 +8,7 @@ import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.ts'
 
 export function StoryReaderComponent(data: {
   storyId: Story['id']
+  storyTitle: string
   author: string
   previousChapterId: Chapter['id'] | null
   chapter: {
