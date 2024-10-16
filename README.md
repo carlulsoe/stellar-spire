@@ -18,12 +18,10 @@ The main features are:
 ## TODO list
 
 
-- update search functionallity to include stories.
 - Add notifications
 - Add stories to prod
-- fix recommendation system
 - fix comments
-- fix likes
-- add posthog
+- deeper usage of posthog
+- Make follows useful
 - 
 

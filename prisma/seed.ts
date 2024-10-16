@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { faker } from '@faker-js/faker'
 import { promiseHash } from 'remix-utils/promise'
 import { prisma } from '#app/utils/db.server.ts'
@@ -356,12 +358,84 @@ async function seed() {
 			},
 		},
 	})
+
+	await importStories('./prisma/stories/analyzed', 'jrwordsmith')
+
 	await startEmbeddingModel()
 	for (const story of await prisma.story.findMany()) {
 		await updateStoryEmbedding(story)
 	}
 
 	console.timeEnd(`🌱 Database has been seeded`)
+}
+
+interface ChapterData {
+	original_title: string
+	suggested_title: string
+	content: string
+}
+
+interface StoryJSON {
+	title: string
+	description: string
+	chapters: ChapterData[]
+	suggested_title: string
+	original_title: string
+}
+
+async function importStories(directoryPath: string, authorUsername: string) {
+	const author = await prisma.user.findUnique({
+		where: { username: authorUsername },
+	})
+	if (!author) {
+		console.error(`Author with username ${authorUsername} not found`)
+		return
+	}
+
+	try {
+		// Read all files in the directory
+		const files = await fs.readdir(directoryPath)
+		const jsonFiles = files.filter((file) => file.endsWith('.json'))
+
+		console.log(`Found ${jsonFiles.length} JSON files to import`)
+
+		for (const file of jsonFiles) {
+			const filePath = path.join(directoryPath, file)
+			const fileContent = await fs.readFile(filePath, 'utf-8')
+			const storyData: StoryJSON = JSON.parse(fileContent) as StoryJSON
+
+			console.log(`Importing story: ${storyData.title}`)
+
+			try {
+				// Create the story
+				const story = await prisma.story.create({
+					data: {
+						title: storyData.suggested_title.replaceAll('"', ''),
+						description: storyData.description.replaceAll('"', ''),
+						authorId: author.id,
+						chapters: {
+							create: storyData.chapters.map((chapter, index) => ({
+								number: index,
+								title: chapter.suggested_title.replaceAll('"', ''),
+								content: chapter.content,
+							})),
+						},
+					},
+					include: {
+						chapters: true,
+					},
+				})
+
+				console.log(
+					`Successfully imported story: ${story.title} with ${story.chapters.length} chapters`,
+				)
+			} catch (error) {
+				console.error(`Error importing story ${storyData.title}:`, error)
+			}
+		}
+	} catch (error) {
+		console.error('Error reading directory:', error)
+	}
 }
 
 seed()

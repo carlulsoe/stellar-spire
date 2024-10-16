@@ -60,7 +60,7 @@ export async function getRecommendedStories(
 	let weightedSum: number[] = Array(1024).fill(0) // bge-large-en-v1.5 produces 1024-dimensional embeddings
 	let weightSum = 0
 
-	for (const historyEntry of userHistory) {
+	for (const historyEntry of userHistory) { // o(distinct stories read)
 		const timeDiff =
 			(currentTime.getTime() - historyEntry.readTime.getTime()) /
 			(1000 * 60 * 60 * 24)
@@ -81,7 +81,7 @@ export async function getRecommendedStories(
 	const allStories = await prisma.story.findMany()
 
 	const similarities = new Map<string, number>()
-	for (const story of allStories) {
+	for (const story of allStories) { // o(total stories)
 		if (!userHistory.some((h) => h.storyId === story.id) && story.embedding) {
 			const simScore =
 				computeCosineSimilarity(
@@ -95,7 +95,7 @@ export async function getRecommendedStories(
 	}
 
 	const recommendations = Array.from(similarities.entries())
-		.sort((a, b) => b[1] - a[1])
+		.sort((a, b) => b[1] - a[1]) // o((total stories - distinct stories read) log (total stories - distinct stories read))
 		.slice(0, k)
 
 	const diverseRecommendations = await addDiversity(
@@ -134,13 +134,13 @@ async function addDiversity(
 		: []
 	const storyMap = new Map(stories.map((s) => [s.id, s]))
 
-	for (let i = 1; i < k; i++) {
+	for (let i = 1; i < k; i++) { // o(k^2 * (total stories - distinct stories read))
 		let maxMinDistance = 0
 		let nextRec: [string, number] | null = null
-		for (const rec of recommendations) {
+		for (const rec of recommendations) { // o((total stories - distinct stories read) * k)
 			if (!diverseRecs.some((r) => r[0] === rec[0])) {
 				const minDistance = Math.min(
-					...diverseRecs.map((r) =>
+					...diverseRecs.map((r) => // o(k)
 						computeCosineSimilarity(
 							JSON.parse(storyMap.get(rec[0])!.embedding ?? '[]') as Vector,
 							JSON.parse(storyMap.get(r[0])!.embedding ?? '[]') as Vector,

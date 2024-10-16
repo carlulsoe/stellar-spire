@@ -61,7 +61,7 @@ model Story {
 
 model Chapter {
   id         String   @id @default(cuid())
-  number     Int      @default(0)
+  number     Int      @default(1)
   title      String
   content    String
   storyId    String
