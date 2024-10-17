@@ -1,50 +1,54 @@
-'use client'
-
 import { Check } from "lucide-react"
 import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "#app/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs"
+import { SetStateAction, useState } from "react"
 
-export function PricingPageComponent() {
+export default function PricingPageComponent() {
+  const [billingPeriod, setBillingPeriod] = useState("yearly")
+
   const tiers = [
     {
-      name: "Basic",
-      price: "$9.99",
-      description: "Perfect for individuals and small projects",
+      name: "Aspiring Author",
+      monthlyPrice: 9.99,
+      yearlyPrice: 99.90,
+      description: "Perfect for budding writers starting their journey",
       features: [
-        "1 user",
-        "5 projects",
-        "5GB storage",
-        "Basic support",
+        "Unlimited writing projects",
+        "Basic grammar and style checker",
+        "Access to writing prompts library",
+        "Community forum access",
       ],
-      cta: "Start Basic",
+      cta: "Start Writing",
     },
     {
-      name: "Premium",
-      price: "$29.99",
-      description: "Ideal for growing teams and businesses",
+      name: "Bestseller",
+      monthlyPrice: 24.99,
+      yearlyPrice: 249.90,
+      description: "Ideal for serious writers aiming for publication",
       features: [
-        "5 users",
-        "20 projects",
-        "50GB storage",
-        "Priority support",
-        "Advanced analytics",
+        "Everything in Aspiring Author",
+        "Advanced AI-powered editing suggestions",
+        "Character development tools",
+        "Plot structure analyzer",
+        "Beta reader management system",
       ],
-      cta: "Upgrade to Premium",
+      cta: "Elevate Your Craft",
       popular: true,
     },
     {
-      name: "Ultimate",
-      price: "$99.99",
-      description: "For large-scale operations and organizations",
+      name: "Literary Legend",
+      monthlyPrice: 49.99,
+      yearlyPrice: 499.90,
+      description: "For established authors and writing professionals",
       features: [
-        "Unlimited users",
-        "Unlimited projects",
-        "1TB storage",
-        "24/7 dedicated support",
-        "Custom integrations",
-        "SLA guarantees",
+        "Everything in Bestseller",
+        "Collaboration tools for co-authors",
+        "Marketing and book promotion tools",
+        "Royalty tracking and analytics",
+        "Priority support from writing experts",
       ],
-      cta: "Get Started",
+      cta: "Master Your Craft",
     },
   ]
 
@@ -53,10 +57,10 @@ export function PricingPageComponent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold sm:text-4xl">
-            Choose the Right Plan for You
+            Choose Your Writing Journey
           </h2>
           <p className="mt-4 text-xl">
-            Unlock advanced features and enhance your writing experience
+            Unlock the tools you need to bring your stories to life
           </p>
         </div>
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:grid-cols-3">
@@ -67,17 +71,34 @@ export function PricingPageComponent() {
                 <CardDescription>{tier.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mt-4 flex items-baseline text-6xl font-extrabold">
-                  {tier.price}
-                  <span className="ml-1 text-2xl font-medium text-gray-500">/month</span>
-                </div>
+                <Tabs value={billingPeriod} className="w-full" onValueChange={(value: SetStateAction<string>) => setBillingPeriod(value)}>
+                  <TabsList className="grid w-full grid-cols-2 mb-4">
+                    <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                    <TabsTrigger value="yearly">Yearly</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="monthly">
+                    <div className="text-center">
+                      <div className="text-5xl font-extrabold">${tier.monthlyPrice}</div>
+                      <div className="mt-1 text-xl text-gray-500">/month</div>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="yearly">
+                    <div className="text-center">
+                      <div className="text-5xl font-extrabold">${tier.yearlyPrice.toFixed(2)}</div>
+                      <div className="mt-1 text-xl">/year</div>
+                      <div className="mt-2 inline-block px-2 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
+                        Save {((tier.monthlyPrice * 12 - tier.yearlyPrice) / (tier.monthlyPrice * 12) * 100).toFixed(0)}%
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
                 <ul className="mt-8 space-y-4">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start">
                       <div className="flex-shrink-0">
                         <Check className="h-6 w-6 text-green-500" />
                       </div>
-                      <p className="ml-3 text-base text-gray-700">{feature}</p>
+                      <p className="ml-3 text-base">{feature}</p>
                     </li>
                   ))}
                 </ul>
