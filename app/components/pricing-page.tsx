@@ -3,10 +3,10 @@ import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "#app/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs"
 import { SetStateAction, useState } from "react"
-
+import { Link } from "@remix-run/react"
 export default function PricingPageComponent() {
   const [billingPeriod, setBillingPeriod] = useState("yearly")
-
+{/* TODO: Add a loader to check if the user is already subscribed */}
   const tiers = [
     {
       name: "Aspiring Author",
@@ -18,6 +18,7 @@ export default function PricingPageComponent() {
         "Basic grammar and style checker",
         "Access to writing prompts library",
         "Community forum access",
+        "Supporting the Stellar Ink community"
       ],
       cta: "Start Writing",
     },
@@ -104,9 +105,11 @@ export default function PricingPageComponent() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" variant={tier.popular ? "default" : "outline"}>
-                  {tier.cta}
-                </Button>
+                <Link to={`/premium/not-implemented?tier=${tier.name.toLowerCase()}`} className="w-full"> {/* TODO: add the different tiers */}
+                  <Button className="w-full" variant={tier.popular ? "default" : "outline"}>
+                    {tier.cta}
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

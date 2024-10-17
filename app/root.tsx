@@ -52,7 +52,7 @@ import { type Theme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
-import PremiumPage from './routes/_marketing+/premium.tsx';
+import PremiumPage from './routes/_marketing+/premium+/index.tsx';
 
 export const links: LinksFunction = () => {
 	return [
@@ -218,11 +218,15 @@ function App() {
 				<header className="container py-6">
 					<nav className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap md:gap-8">
 						<Logo />
-						<Link to="/premium">
-							<Button variant="default" size="lg">
-								Upgrade to Premium
-							</Button>
-						</Link>
+						{user ? (
+							<Link to="/premium">
+								<Button variant="default" size="lg">
+									Go Premium
+								</Button>
+							</Link>
+						) : (
+							<></>
+						)}
 						<div className="ml-auto hidden max-w-sm flex-1 sm:block">
 							{searchBar}
 						</div>
