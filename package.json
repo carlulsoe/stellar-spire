@@ -78,7 +78,7 @@
     "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "compute-cosine-similarity": "^1.1.0",
-    "cookie": "^0.6.0",
+    "cookie": "^0.7.0",
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
