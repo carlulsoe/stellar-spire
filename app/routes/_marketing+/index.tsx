@@ -9,6 +9,7 @@ import { StoryCarousel } from '#app/components/story-carousel.tsx'
 import { getUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.ts'
 import { getRecommendedStories } from '#app/utils/story-recommender.server.ts'
+import { cachified, lruCache } from '#app/utils/cache.server.js'
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
 
 
@@ -17,8 +18,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	let recommendedStories: any[] = []
 
 	if (userId) {
-		recommendedStories = await getRecommendedStories(userId, 10)
-
+		recommendedStories = await cachified({
+			ttl: 1000 * 60, // 1 minute
+			swr: 1000 * 60 * 5, // 5 minutes
+			cache: lruCache,
+			key: userId+'-recommendedStories',
+			getFreshValue: () => getRecommendedStories(userId, 10),
+		})
+		
 		if (recommendedStories.length > 0) {
 			const storiesWithAuthors = await prisma.story.findMany({
 				where: { id: { in: recommendedStories.map(story => story.id) } },
