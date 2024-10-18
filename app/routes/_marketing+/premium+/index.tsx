@@ -11,9 +11,51 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: 'Stellar Ink Premium' }]
 
 export default function PremiumPage() {
+	const tiers = [
+		{
+		  name: "Supporter",
+		  monthlyPrice: 4.99,
+		  yearlyPrice: (4.99*6),
+		  description: "For those who want to support the Stellar Ink community",
+		  features: [
+			"Supporting the Stellar Ink community",
+		  ],
+		  cta: "Support the Community",
+		  popular: false,
+		},
+		{
+		  name: "Author",
+		  monthlyPrice: 14.99,
+		  yearlyPrice: (14.99*10),
+		  description: "Ideal for serious writers aiming for publication",
+		  features: [
+			"Advanced AI-powered editing suggestions",
+			"Character development tools",
+			"Plot structure analyzer",
+			"Beta reader management system",
+		  ],
+		  cta: "Elevate Your Craft",
+		  popular: true,
+		},
+		{
+		  name: "Pro",
+		  monthlyPrice: 49.99,
+		  yearlyPrice: (49.99*10),
+		  description: "For established authors and writing professionals",
+		  features: [
+			"Everything in Author",
+			"Collaboration tools for co-authors",
+			"Marketing and book promotion tools",
+			"Royalty tracking and analytics",
+			"Priority support from writing experts",
+		  ],
+		  cta: "Unlock Your Potential",
+		  popular: false,
+		},
+	  ]
 	return (
 		<main className="font-poppins">
-			<PricingPageComponent />
+			<PricingPageComponent tiers={tiers} />
 		</main>
 	)
 }

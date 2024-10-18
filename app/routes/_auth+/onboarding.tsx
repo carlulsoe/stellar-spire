@@ -31,6 +31,7 @@ import {
 	UsernameSchema,
 } from '#app/utils/user-validation.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
+import { CONFIG } from '#app/config.js'
 
 export const onboardingEmailSessionKey = 'onboardingEmail'
 
@@ -126,7 +127,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Setup Epic Notes Account' }]
+	return [{ title: 'Setup ' + CONFIG.SITENAME + ' Account' }]
 }
 
 export default function OnboardingRoute() {

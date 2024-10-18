@@ -23,6 +23,7 @@ import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { handleNewSession } from './login.server.ts'
+import { CONFIG } from '#app/config.js'
 
 export const handle: SEOHandle = {
 	getSitemapEntries: () => null,
@@ -202,7 +203,7 @@ export default function LoginPage() {
 }
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Login to Epic Notes' }]
+	return [{ title: 'Login to ' + CONFIG.SITENAME }]
 }
 
 export function ErrorBoundary() {

@@ -20,6 +20,7 @@ import { authSessionStorage } from '#app/utils/session.server.ts'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { NameSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { twoFAVerificationType } from './profile.two-factor.tsx'
+import { CONFIG } from '#app/config.js'
 
 export const handle: SEOHandle = {
 	getSitemapEntries: () => null,
@@ -163,7 +164,7 @@ export default function EditUserProfile() {
 				<div>
 					<Link
 						reloadDocument
-						download="my-epic-notes-data.json"
+						download={CONFIG.SITENAME.toLowerCase().replace(" ", "-") + "-data.json"}
 						to="/resources/download-user-data"
 					>
 						<Icon name="download">Download your data</Icon>

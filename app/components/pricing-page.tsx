@@ -4,61 +4,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs"
 import { SetStateAction, useState } from "react"
 import { Link } from "@remix-run/react"
-export default function PricingPageComponent() {
+export default function PricingPageComponent(props: {
+  tiers: {
+    name: string;
+    monthlyPrice: number;
+    yearlyPrice: number;
+    description: string;
+    features: string[];
+    cta: string;
+  popular: boolean;
+}[];
+}) {
   const [billingPeriod, setBillingPeriod] = useState("yearly")
-{/* TODO: Add a loader to check if the user is already subscribed */}
-  const tiers = [
-    {
-      name: "Aspiring Author",
-      monthlyPrice: 9.99,
-      yearlyPrice: 99.90,
-      description: "Perfect for budding writers starting their journey",
-      features: [
-        "Unlimited writing projects",
-        "Basic grammar and style checker",
-        "Access to writing prompts library",
-        "Community forum access",
-        "Supporting the Stellar Ink community"
-      ],
-      cta: "Start Writing",
-    },
-    {
-      name: "Bestseller",
-      monthlyPrice: 24.99,
-      yearlyPrice: 249.90,
-      description: "Ideal for serious writers aiming for publication",
-      features: [
-        "Everything in Aspiring Author",
-        "Advanced AI-powered editing suggestions",
-        "Character development tools",
-        "Plot structure analyzer",
-        "Beta reader management system",
-      ],
-      cta: "Elevate Your Craft",
-      popular: true,
-    },
-    {
-      name: "Literary Legend",
-      monthlyPrice: 49.99,
-      yearlyPrice: 499.90,
-      description: "For established authors and writing professionals",
-      features: [
-        "Everything in Bestseller",
-        "Collaboration tools for co-authors",
-        "Marketing and book promotion tools",
-        "Royalty tracking and analytics",
-        "Priority support from writing experts",
-      ],
-      cta: "Master Your Craft",
-    },
-  ]
+/* TODO: Add a loader to check if the user is already subscribed */
+  const tiers = props.tiers
 
   return (
     <div className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold sm:text-4xl">
-            Choose Your Writing Journey
+            Choose Your Journey
           </h2>
           <p className="mt-4 text-xl">
             Unlock the tools you need to bring your stories to life
@@ -94,7 +60,7 @@ export default function PricingPageComponent() {
                   </TabsContent>
                 </Tabs>
                 <ul className="mt-8 space-y-4">
-                  {tier.features.map((feature) => (
+                  {tier.features.map((feature: string) => (
                     <li key={feature} className="flex items-start">
                       <div className="flex-shrink-0">
                         <Check className="h-6 w-6 text-green-500" />

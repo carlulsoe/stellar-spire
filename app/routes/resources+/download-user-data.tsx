@@ -22,7 +22,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 				},
 			},
 			stories: {
-				include: {
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					authorId: true,
+					createdAt: true,
+					updatedAt: true,
+					views: true,
 					coverImage: {
 						select: {
 							id: true,
