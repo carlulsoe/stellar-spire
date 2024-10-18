@@ -24,6 +24,7 @@ import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { EmailSchema } from '#app/utils/user-validation.ts'
 import { prepareVerification } from './verify.server.ts'
+import { CONFIG } from '#app/config.js'
 
 export const handle: SEOHandle = {
 	getSitemapEntries: () => null,
@@ -71,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	const response = await sendEmail({
 		to: email,
-		subject: `Welcome to Stellar Ink!`,
+		subject: `Welcome to ${CONFIG.SITENAME}!`,
 		react: <SignupEmail onboardingUrl={verifyUrl.toString()} otp={otp} />,
 	})
 
@@ -100,7 +101,7 @@ export function SignupEmail({
 		<E.Html lang="en" dir="ltr">
 			<E.Container>
 				<h1>
-					<E.Text>Welcome to Stellar Ink!</E.Text>
+					<E.Text>Welcome to {CONFIG.SITENAME}!</E.Text>
 				</h1>
 				<p>
 					<E.Text>
@@ -117,7 +118,7 @@ export function SignupEmail({
 }
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Sign Up | Stellar Ink' }]
+	return [{ title: 'Sign Up | ' + CONFIG.SITENAME }]
 }
 
 export default function SignupRoute() {

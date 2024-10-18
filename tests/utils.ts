@@ -1,8 +1,9 @@
 import * as setCookieParser from 'set-cookie-parser'
 import { sessionKey } from '#app/utils/auth.server.ts'
 import { authSessionStorage } from '#app/utils/session.server.ts'
+import { CONFIG } from '#app/config.js'
 
-export const BASE_URL = 'https://www.epicstack.dev'
+export const BASE_URL = 'https://www.' + CONFIG.DOMAIN
 
 export function convertSetCookieToCookie(setCookie: string) {
 	const parsedCookie = setCookieParser.parseString(setCookie)

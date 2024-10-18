@@ -10,7 +10,9 @@ import { getUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.ts'
 import { getRecommendedStories } from '#app/utils/story-recommender.server.ts'
 import { cachified, lruCache } from '#app/utils/cache.server.js'
-export const meta: MetaFunction = () => [{ title: 'Stellar Ink' }]
+import { CONFIG } from '#app/config.js'
+
+export const meta: MetaFunction = () => [{ title: CONFIG.SITENAME }]
 
 
 export async function loader({ request }: LoaderFunctionArgs) {

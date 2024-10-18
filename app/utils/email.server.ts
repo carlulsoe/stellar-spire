@@ -1,3 +1,4 @@
+import { CONFIG } from '#app/config.js'
 import { renderAsync } from '@react-email/components'
 import { type ReactElement } from 'react'
 import { z } from 'zod'
@@ -31,7 +32,7 @@ export async function sendEmail({
 	| { html: string; text: string; react?: never }
 	| { react: ReactElement; html?: never; text?: never }
 )) {
-	const from = 'hello@epicstack.dev'
+	const from = 'hello@' + CONFIG.DOMAIN
 
 	const email = {
 		from,

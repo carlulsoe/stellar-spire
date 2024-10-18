@@ -30,6 +30,7 @@ import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.js'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
 import { type loader as storiesLoader } from '../../../users+/$username_+/stories.tsx'
+import { CONFIG } from '#app/config.js'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const story = await prisma.story.findUnique({
@@ -202,7 +203,7 @@ export const meta: MetaFunction<
 			? data?.story.description.slice(0, 97) + '...'
 			: 'No content'
 	return [
-		{ title: `${storyTitle} | ${displayName}'s Stories | Stellar Ink` },
+		{ title: `${storyTitle} | ${displayName}'s Stories | ${CONFIG.SITENAME}` },
 		{
 			name: 'description',
 			content: storyDescription,

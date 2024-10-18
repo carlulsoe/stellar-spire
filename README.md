@@ -1,4 +1,4 @@
-# Stellar ink
+# Stellar Spire
 
 This is going to be the best place to read fiction and the best place to post
 fiction online.

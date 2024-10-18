@@ -45,7 +45,7 @@ async function getStoryPopularity(storyId: string): Promise<number> {
 	return readCount / 100 // Normalize to a 0-1 scale. Adjust as needed.
 }
 
-export async function getRecommendedStories(
+export async function getRecommendedStories( // This is already very slow. TODO: Optimize
 	userId: string,
 	k: number = 10,
 ): Promise<Story[]> {

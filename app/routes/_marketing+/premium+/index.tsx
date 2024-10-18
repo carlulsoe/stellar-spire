@@ -1,6 +1,7 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import PricingPageComponent from '#app/components/pricing-page'
 import { requireUserId } from '#app/utils/auth.server.js'
+import { CONFIG } from '#app/config.js'
 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -8,7 +9,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 	return { user }
 }
 
-export const meta: MetaFunction = () => [{ title: 'Stellar Ink Premium' }]
+export const meta: MetaFunction = () => [{ title: CONFIG.SITENAME + ' Premium' }]
 
 export default function PremiumPage() {
 	const tiers = [
@@ -16,9 +17,9 @@ export default function PremiumPage() {
 		  name: "Supporter",
 		  monthlyPrice: 4.99,
 		  yearlyPrice: (4.99*6),
-		  description: "For those who want to support the Stellar Ink community",
+		  description: "For those who want to support the " + CONFIG.SITENAME + " community",
 		  features: [
-			"Supporting the Stellar Ink community",
+			"Supporting the " + CONFIG.SITENAME + " community",
 		  ],
 		  cta: "Support the Community",
 		  popular: false,

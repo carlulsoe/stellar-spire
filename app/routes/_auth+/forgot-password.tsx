@@ -19,6 +19,7 @@ import { sendEmail } from '#app/utils/email.server.ts'
 import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { EmailSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { prepareVerification } from './verify.server.ts'
+import { CONFIG } from '#app/config.js'
 
 export const handle: SEOHandle = {
 	getSitemapEntries: () => null,
@@ -75,7 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 	const response = await sendEmail({
 		to: user.email,
-		subject: `Stellar Ink Password Reset`,
+		subject: `[${CONFIG.SITENAME}] Password Reset`,
 		react: (
 			<ForgotPasswordEmail onboardingUrl={verifyUrl.toString()} otp={otp} />
 		),
@@ -102,7 +103,7 @@ function ForgotPasswordEmail({
 		<E.Html lang="en" dir="ltr">
 			<E.Container>
 				<h1>
-					<E.Text>Stellar Ink Password Reset</E.Text>
+					<E.Text>{CONFIG.SITENAME} Password Reset</E.Text>
 				</h1>
 				<p>
 					<E.Text>
@@ -119,7 +120,7 @@ function ForgotPasswordEmail({
 }
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Password Recovery for Stellar Ink' }]
+	return [{ title: 'Password Recovery for ' + CONFIG.SITENAME }]
 }
 
 export default function ForgotPasswordRoute() {
