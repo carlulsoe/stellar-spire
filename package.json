@@ -67,7 +67,7 @@
     "@remix-run/node": "2.10.3",
     "@remix-run/react": "2.10.3",
     "@sentry/profiling-node": "^8.18.0",
-    "@sentry/remix": "^8.18.0",
+    "@sentry/remix": "^8.34.0",
     "@xenova/transformers": "^2.17.2",
     "address": "^2.0.3",
     "bcryptjs": "^2.4.3",
@@ -78,7 +78,7 @@
     "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "compute-cosine-similarity": "^1.1.0",
-    "cookie": "^0.7.0",
+    "cookie": "^0.7.1",
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
@@ -163,7 +163,7 @@
     "remix-flat-routes": "^0.6.5",
     "tsx": "^4.16.2",
     "typescript": "^5.5.3",
-    "vite": "^5.3.4",
+    "vite": "^5.4.9",
     "vitest": "^2.0.3"
   },
   "engines": {
