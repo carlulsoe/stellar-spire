@@ -4,7 +4,7 @@ import {
 	type HeadersFunction,
 	type LinksFunction,
 	type MetaFunction,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import {
 	Form,
 	Link,

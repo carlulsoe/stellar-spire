@@ -6,7 +6,7 @@ import {
 	redirect,
 	type LoaderFunctionArgs,
 	type ActionFunctionArgs,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { Form, Link, useActionData } from '@remix-run/react'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { Button } from '#app/components/ui/button.tsx'

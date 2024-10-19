@@ -1,4 +1,4 @@
-import { vitePlugin as remix } from '@remix-run/dev'
+import { vitePlugin as remix, cloudflareDevProxyVitePlugin as remixCloudflareDevProxy, } from '@remix-run/dev'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { glob } from 'glob'
 import { flatRoutes } from 'remix-flat-routes'
@@ -6,6 +6,12 @@ import { defineConfig } from 'vite'
 import { envOnlyMacros } from 'vite-env-only'
 
 const MODE = process.env.NODE_ENV
+
+declare module "@remix-run/cloudflare" {
+	interface Future {
+	  v3_singleFetch: true;
+	}
+  }
 
 export default defineConfig({
 	build: {
@@ -33,12 +39,16 @@ export default defineConfig({
 		},
 	},
 	plugins: [
+		remixCloudflareDevProxy(),
 		envOnlyMacros(),
 		// it would be really nice to have this enabled in tests, but we'll have to
 		// wait until https://github.com/remix-run/remix/issues/9871 is fixed
 		process.env.NODE_ENV === 'test'
 			? null
 			: remix({
+					future: {
+						v3_singleFetch: true,
+					},
 					ignoredRouteFiles: ['**/*'],
 					serverModuleFormat: 'esm',
 					routes: async (defineRoutes) => {

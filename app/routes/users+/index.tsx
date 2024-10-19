@@ -1,4 +1,4 @@
-import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, redirect, type LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { Link, useLoaderData } from '@remix-run/react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'

@@ -1,5 +1,5 @@
 import { invariant } from '@epic-web/invariant'
-import { json, redirect } from '@remix-run/node'
+import { json, redirect } from '@remix-run/cloudflare'
 import { prisma } from '#app/utils/db.server.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
 import { resetPasswordUsernameSessionKey } from './reset-password.tsx'

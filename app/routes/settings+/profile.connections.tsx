@@ -6,7 +6,7 @@ import {
 	type ActionFunctionArgs,
 	type SerializeFrom,
 	type HeadersFunction,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { useState } from 'react'
 import { Icon } from '#app/components/ui/icon.tsx'

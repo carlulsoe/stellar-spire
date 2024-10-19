@@ -5,7 +5,7 @@ import {
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { z } from 'zod'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'

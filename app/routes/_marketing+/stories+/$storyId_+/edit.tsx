@@ -1,5 +1,5 @@
 import { invariantResponse } from '@epic-web/invariant'
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { requireUserId } from '#app/utils/auth.server.ts'

@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
-import { createRequestHandler } from '@remix-run/express'
-import { type ServerBuild } from '@remix-run/node'
+import { createRequestHandler } from '@remix-run/cloudflare'
+import { type ServerBuild } from '@remix-run/cloudflare'
 import { ip as ipAddress } from 'address'
 import chalk from 'chalk'
 import closeWithGrace from 'close-with-grace'
@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit'
 import getPort, { portNumbers } from 'get-port'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import { mode } from '../build/server/index.js'
 
 const MODE = process.env.NODE_ENV ?? 'development'
 const IS_PROD = MODE === 'production'
@@ -202,9 +203,9 @@ async function getBuild() {
 	try {
 		const build = viteDevServer
 			? await viteDevServer.ssrLoadModule('virtual:remix/server-build')
-			: // @ts-expect-error - the file might not exist yet but it will
-				// eslint-disable-next-line import/no-unresolved
-				await import('../build/server/index.js')
+			: // The file might not exist yet but it will be created during the build process
+			  // eslint-disable-next-line import/no-unresolved
+			  await import('../build/server/index.js')
 
 		return { build: build as unknown as ServerBuild, error: null }
 	} catch (error) {
@@ -223,22 +224,14 @@ if (!ALLOW_INDEXING) {
 
 app.all(
 	'*',
-	createRequestHandler({
-		getLoadContext: (_: any, res: any) => ({
-			cspNonce: res.locals.cspNonce,
-			serverBuild: getBuild(),
-		}),
-		mode: MODE,
-		build: async () => {
-			const { error, build } = await getBuild()
-			// gracefully "catch" the error
-			if (error) {
-				throw error
-			}
-			return build
-		},
-	}),
-)
+	async (req, res, next) => {
+		const { error, build } = await getBuild();
+		if (error) {
+			return next(error);
+		}
+		return createRequestHandler(build, MODE)(req as unknown as Request);
+	}
+);
 
 const desiredPort = Number(process.env.PORT || 3000)
 const portToUse = await getPort({

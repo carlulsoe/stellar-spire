@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
 import { invariantResponse } from '@epic-web/invariant'

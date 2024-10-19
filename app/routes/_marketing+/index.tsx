@@ -3,7 +3,7 @@ import {
 	type MetaFunction,
 	json,
 	type LoaderFunctionArgs,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { StoryCarousel } from '#app/components/story-carousel.tsx'
 import { getUserId } from '#app/utils/auth.server.js'
