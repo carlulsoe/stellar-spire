@@ -1,15 +1,22 @@
 import { remember } from '@epic-web/remember'
 import { PrismaClient } from '@prisma/client'
 import chalk from 'chalk'
+import { PrismaD1 } from '@prisma/adapter-d1'
+
+export interface Env {
+	DB: D1Database
+}
 
 export const prisma = remember('prisma', () => {
 	// NOTE: if you change anything in this function you'll need to restart
 	// the dev server to see your changes.
 
 	// Feel free to change this log threshold to something that makes sense for you
+	const adapter = new PrismaD1(env.DB)
 	const logThreshold = 20
 
 	const client = new PrismaClient({
+		adapter,
 		log: [
 			{ level: 'query', emit: 'event' },
 			{ level: 'error', emit: 'stdout' },

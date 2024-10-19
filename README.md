@@ -25,3 +25,6 @@ The main features are:
 - Make follows useful
 - 
 
+## For D1 database and prisma
+
+<https://www.prisma.io/docs/orm/overview/databases/cloudflare-d1>
