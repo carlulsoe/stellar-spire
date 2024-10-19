@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { faker } from '@faker-js/faker'
-import { type PrismaClient } from '@prisma/client'
+import { Prisma, type PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { UniqueEnforcer } from 'enforce-unique'
 
@@ -134,4 +134,29 @@ export async function cleanupDb(prisma: PrismaClient) {
 	} finally {
 		await prisma.$executeRawUnsafe(`PRAGMA foreign_keys = ON`)
 	}
+}
+
+export async function createComment(prisma: PrismaClient, { chapterId, authorId }: { chapterId: string; authorId: string }) {
+	const comment = await prisma.comment.create({
+		data: {
+			content: faker.lorem.paragraph(),
+			score: faker.number.int({ min: 0, max: 100 }),
+			chapter: { connect: { id: chapterId } },
+			author: { connect: { id: authorId } },
+			parentId: undefined,
+		},
+	})
+	return comment
+}
+
+export async function createStory(prisma: PrismaClient, { authorId }: { authorId: string }) {
+	const story = await prisma.story.create({
+		data: {
+			title: faker.lorem.sentence(),
+			description: faker.lorem.sentence(),
+			authorId,
+			coverImage: undefined,
+		},
+	})
+	return story
 }

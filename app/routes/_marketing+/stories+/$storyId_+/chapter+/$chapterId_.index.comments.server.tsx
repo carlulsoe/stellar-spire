@@ -55,15 +55,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
+  console.log("action")
+  console.log(request)
+  
+  console.log(params)
   const userId = await requireUserId(request)
   const { chapterId } = params
   invariant(chapterId, "chapterId is required")
 
   const formData = await request.formData()
+  console.log(formData)
   const submission = parseWithZod(formData, {
     schema: CommentSchema,
   })
-
+  console.log(submission)
   if (submission.status !== 'success') {
     return json(
       { result: submission.reply() },
@@ -72,7 +77,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   const { content, parentId } = submission.value
-
+  console.log(content, parentId)
   const comment = await prisma.comment.create({
     data: {
       content,
@@ -81,6 +86,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
       ...(parentId ? { parentId } : {}),
     },
   })
-
+  console.log(comment)
   return redirect(`/stories/${params.storyId}/chapter/${chapterId}`)
 }

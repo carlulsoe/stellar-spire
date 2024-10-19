@@ -1,4 +1,4 @@
-import { getFormProps, getInputProps, getTextareaProps, useForm } from '@conform-to/react'
+import { FormProvider, getFormProps, getInputProps, getTextareaProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
@@ -11,7 +11,7 @@ import { Button } from "#app/components/ui/button"
 import { Textarea } from "#app/components/ui/textarea"
 import { type action, type loader } from './$chapterId_.index.comments.server'
 import { TextareaProps } from '../../../../../components/ui/textarea';
-import { TextareaField } from '#app/components/forms.js'
+import { ErrorList, Field, TextareaField } from '#app/components/forms.js'
 
 type Comment = {
   id: string
@@ -37,8 +37,8 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
   const handleUpvote = () => setScore(prevScore => prevScore + 1)
   const handleDownvote = () => setScore(prevScore => prevScore - 1)
   
-  invariantResponse(comment.author.username[0], "Comment author username is required" , { status: 400 })
-  invariantResponse(comment.author.image?.id, "Comment author image is required" , { status: 400 })
+  // invariantResponse(comment.author.username[0], "Comment author username is required" , { status: 400 })
+  // invariantResponse(comment.author.image?.id, "Comment author image is required" , { status: 400 })
   return (
     <div className={`flex space-x-2 ${depth > 0 ? 'ml-6 mt-2' : 'mt-4'}`}>
       <div className="flex flex-col items-center space-y-1">
@@ -54,7 +54,7 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
         <div className="flex items-center space-x-2">
           <Avatar className="h-6 w-6">
             <AvatarImage src={`/resources/user-images/${comment.author.image?.id}`} />
-            <AvatarFallback>{comment.author.username[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{comment.author.username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium">{comment.author.username}</span>
         </div>
@@ -82,7 +82,7 @@ function CommentForm({ parentId }: { parentId?: string }) {
   const [form, fields] = useForm({
     id: 'comment-form',
     constraint: getZodConstraint(CommentSchema),
-    lastResult: actionData && 'result' in actionData ? actionData.result : undefined,
+    lastResult: actionData?.result,
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CommentSchema })
     },
@@ -90,18 +90,22 @@ function CommentForm({ parentId }: { parentId?: string }) {
   })
 
   return (
-    <Form method="post" className="mt-4" {...getFormProps(form)}>
-      <TextareaField
+    <FormProvider context={form.context}>
+    <Form method="post" className="mt-4" {...getFormProps(form)} encType="application/x-www-form-urlencoded">
+      <Field
         labelProps={{ }}
-        textareaProps={{...getTextareaProps(fields.content)}}
+        inputProps={{...getInputProps(fields.content, { type: 'text' })}}
         errors={fields.content.errors}
         className="min-h-[100px]"
       />
+      <ErrorList id={form.errorId} errors={form.errors} />
+      
       {parentId && <input type="hidden" name="parentId" value={parentId} />}
       <Button type="submit" className="mt-2" disabled={isSubmitting}>
         {isSubmitting ? "Posting..." : "Comment"}
       </Button>
     </Form>
+    </FormProvider>
   )
 }
 
@@ -133,6 +137,9 @@ export function ErrorBoundary() {
       statusHandlers={{
         404: ({}) => (
           <p>No comments found for this chapter</p>
+        ),
+        400: ({ error }) => (
+          <p>{error.data.message}</p>
         ),
       }}
     />
