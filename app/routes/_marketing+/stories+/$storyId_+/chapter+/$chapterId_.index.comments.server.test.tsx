@@ -83,7 +83,7 @@ test('action saves comments', async () => {
     params: { storyId: story.id, chapterId: chapter.id }
   })
   expect(response.status).toBe(302)
-  expect(response.headers.get('Location')).toBe(`/stories/${story.id}/chapter/${chapter.id}`)
+  expect(response.headers.get('Location')).toBe(`/stories/${story.id}/chapter/${chapter.id}/`)
   const comments = await prisma.comment.findMany({ where: { chapterId: chapter.id } })
   expect(comments.length).toBe(1)
   expect(comments[0]?.content).toBe('Test comment')

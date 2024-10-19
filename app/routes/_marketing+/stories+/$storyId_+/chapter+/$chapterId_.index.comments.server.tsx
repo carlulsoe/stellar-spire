@@ -55,37 +55,47 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  console.log("action")
-  console.log(request)
-  
-  console.log(params)
-  const userId = await requireUserId(request)
-  const { chapterId } = params
-  invariant(chapterId, "chapterId is required")
+  //console.log("Action started")
+  try {
+    const userId = await requireUserId(request)
+    const { chapterId } = params
+    invariant(chapterId, "chapterId is required")
 
-  const formData = await request.formData()
-  console.log(formData)
-  const submission = parseWithZod(formData, {
-    schema: CommentSchema,
-  })
-  console.log(submission)
-  if (submission.status !== 'success') {
-    return json(
-      { result: submission.reply() },
-      { status: submission.status === 'error' ? 400 : 200 },
-    )
+    const formData = await request.formData()
+    //console.log("Form data:", formData)
+
+    const submission = parseWithZod(formData, {
+      schema: CommentSchema,
+    })
+    //console.log("Submission result:", submission)
+
+    if (submission.status !== 'success') {
+      console.log("Submission failed:", submission.error)
+      return json(
+        { result: submission.reply() },
+        { status: submission.status === 'error' ? 400 : 200 },
+      )
+    }
+
+    const { content, parentId } = submission.value
+    //console.log("Creating comment with:", { content, parentId, userId, chapterId })
+
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        authorId: userId,
+        chapterId,
+        ...(parentId ? { parentId } : {}),
+      },
+    })
+    //console.log("Comment created:", comment)
+
+    const allComments = await prisma.comment.findMany({ where: { chapterId } })
+    //console.log("All comments after creation:", allComments)
+
+    return redirect(`/stories/${params.storyId}/chapter/${chapterId}/`)
+  } catch (error) {
+    console.error("Error in action:", error)
+    throw error
   }
-
-  const { content, parentId } = submission.value
-  console.log(content, parentId)
-  const comment = await prisma.comment.create({
-    data: {
-      content,
-      authorId: userId,
-      chapterId,
-      ...(parentId ? { parentId } : {}),
-    },
-  })
-  console.log(comment)
-  return redirect(`/stories/${params.storyId}/chapter/${chapterId}`)
 }

@@ -1,5 +1,14 @@
-import { FormProvider, getFormProps, getInputProps, getTextareaProps, useForm } from '@conform-to/react'
+import {
+	FormProvider,
+	getFieldsetProps,
+	getFormProps,
+	getInputProps,
+	getTextareaProps,
+	useForm,
+	type FieldMetadata,
+} from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
+import { type SerializeFrom } from '@remix-run/node'
 import { invariantResponse } from '@epic-web/invariant'
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
 import { ChevronUp, ChevronDown, MessageSquare } from 'lucide-react'
@@ -12,6 +21,8 @@ import { Textarea } from "#app/components/ui/textarea"
 import { type action, type loader } from './$chapterId_.index.comments.server'
 import { TextareaProps } from '../../../../../components/ui/textarea';
 import { ErrorList, Field, TextareaField } from '#app/components/forms.js'
+import { StatusButton } from '#app/components/ui/status-button.js'
+import { useIsPending } from '#app/utils/misc.js'
 
 type Comment = {
   id: string
@@ -76,8 +87,7 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
 
 function CommentForm({ parentId }: { parentId?: string }) {
   const actionData = useActionData<typeof action>()
-  const navigation = useNavigation()
-  const isSubmitting = navigation.state === "submitting"
+  const isPending = useIsPending()
 
   const [form, fields] = useForm({
     id: 'comment-form',
@@ -90,22 +100,28 @@ function CommentForm({ parentId }: { parentId?: string }) {
   })
 
   return (
-    <FormProvider context={form.context}>
-    <Form method="post" className="mt-4" {...getFormProps(form)} encType="application/x-www-form-urlencoded">
+    <Form method="POST" className="mt-4" {...getFormProps(form)} encType="application/x-www-form-urlencoded">
       <Field
-        labelProps={{ }}
-        inputProps={{...getInputProps(fields.content, { type: 'text' })}}
-        errors={fields.content.errors}
-        className="min-h-[100px]"
-      />
-      <ErrorList id={form.errorId} errors={form.errors} />
-      
-      {parentId && <input type="hidden" name="parentId" value={parentId} />}
-      <Button type="submit" className="mt-2" disabled={isSubmitting}>
-        {isSubmitting ? "Posting..." : "Comment"}
-      </Button>
+						labelProps={{
+							htmlFor: fields.content.id,
+							children: 'Comment',
+						}}
+						inputProps={{
+							...getInputProps(fields.content, { type: 'text' }),
+							autoFocus: true,
+						}}
+						errors={fields.content.errors}
+					/>
+					<ErrorList errors={form.errors} id={form.errorId} />
+					<StatusButton
+						className="w-full"
+						status={isPending ? 'pending' : (form.status ?? 'idle')}
+						type="submit"
+						disabled={isPending}
+					>
+						{isPending ? "Posting..." : "Comment"}
+					</StatusButton>
     </Form>
-    </FormProvider>
   )
 }
 

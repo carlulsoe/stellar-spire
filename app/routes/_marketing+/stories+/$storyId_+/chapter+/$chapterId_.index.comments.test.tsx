@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker'
 import { createRemixStub } from '@remix-run/testing'
 import { render, screen, waitFor } from '@testing-library/react'
 import setCookieParser from 'set-cookie-parser'
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { loader as rootLoader } from '#app/root.tsx'
 import { getSessionExpirationDate, sessionKey } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
@@ -115,17 +115,10 @@ test('Submits a new comment', async () => {
 	fireEvent.click(submitButton)
 
 	await waitFor(() => {
-		expect(screen.getByText('Posting...')).toBeInTheDocument()
-	})
-
-	const comment = await prisma.comment.findFirst({ select: { id: true, chapterId: true }, where: { content: 'This is a test comment' }})
-	console.log(comment)
-	expect(comment).not.toBeNull()
-	expect(comment?.chapterId).toBe(chapter.id)
-
-	await waitFor(() => {
 		expect(screen.getByText('This is a test comment')).toBeInTheDocument()
+		expect(screen.getByText(user.username)).toBeInTheDocument()
 	})
+	expect(screen.queryByText('No comments yet')).toBeNull()
 })
 
 test('Displays error for empty comment submission', async () => {
@@ -161,5 +154,8 @@ test('Displays error for empty comment submission', async () => {
 		expect(screen.getByText('Required')).toBeInTheDocument()
 	})
 })
+
+
+
 
 
