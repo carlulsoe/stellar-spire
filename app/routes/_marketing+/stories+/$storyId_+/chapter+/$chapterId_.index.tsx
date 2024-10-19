@@ -1,6 +1,6 @@
 import { invariantResponse } from "@epic-web/invariant"
 import { type Story } from "@prisma/client"
-import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from "@remix-run/node"
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from "@remix-run/cloudflare"
 import { useLoaderData } from "@remix-run/react"
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
 import StoryPage from "#app/components/story-page.js"

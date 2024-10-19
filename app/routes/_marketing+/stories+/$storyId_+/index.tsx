@@ -5,7 +5,7 @@ import {
 	json,
 	type LoaderFunctionArgs,
 	type ActionFunctionArgs,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import {
 	Form,
 	Link,
@@ -187,28 +187,6 @@ export function DeleteStory({ id }: { id: string }) {
 			<ErrorList errors={form.errors} id={form.errorId} />
 		</Form>
 	)
-}
-
-export const meta: MetaFunction<
-	typeof loader,
-	{ 'routes/users+/$username_+/stories': typeof storiesLoader }
-> = ({ data, params, matches }) => {
-	const storiesMatch = matches.find(
-		(m) => m.id === 'routes/users+/$username_+/stories',
-	)
-	const displayName = storiesMatch?.data?.author.name ?? params.username
-	const storyTitle = data?.story.title ?? 'Story'
-	const storyDescription =
-		data && data.story.description.length > 100
-			? data?.story.description.slice(0, 97) + '...'
-			: 'No content'
-	return [
-		{ title: `${storyTitle} | ${displayName}'s Stories | ${CONFIG.SITENAME}` },
-		{
-			name: 'description',
-			content: storyDescription,
-		},
-	]
 }
 
 export function ErrorBoundary() {

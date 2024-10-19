@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { StoryEditor } from '../../users+/$username_+/__story-editor.tsx'
 

@@ -7,6 +7,12 @@ node_modules
 .env
 .cache
 
+/.cache
+.env
+.dev.vars
+
+.wrangler
+
 /prisma/data.db
 /prisma/data.db-journal
 /tests/prisma

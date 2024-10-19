@@ -12,6 +12,7 @@ import { prisma } from '#app/utils/db.server.ts'
 import { authSessionStorage } from '#app/utils/session.server.ts'
 import { createUser, getUserImages } from '#tests/db-utils.ts'
 import { default as UsernameRoute, loader } from './$username.tsx'
+import { LoaderFunctionArgs } from '@remix-run/cloudflare'
 
 test('The user profile when not logged in as self', async () => {
 	const userImages = await getUserImages()
@@ -25,7 +26,9 @@ test('The user profile when not logged in as self', async () => {
 		{
 			path: '/users/:username',
 			Component: UsernameRoute,
-			loader,
+			loader: async (args) => {
+				return loader(args as LoaderFunctionArgs)
+			},
 		},
 	])
 
@@ -68,7 +71,7 @@ test('The user profile when logged in as self', async () => {
 			loader: async (args) => {
 				// add the cookie header to the request
 				args.request.headers.set('cookie', cookieHeader)
-				return rootLoader(args)
+				return rootLoader(args as LoaderFunctionArgs)
 			},
 			children: [
 				{
@@ -77,7 +80,7 @@ test('The user profile when logged in as self', async () => {
 					loader: async (args) => {
 						// add the cookie header to the request
 						args.request.headers.set('cookie', cookieHeader)
-						return loader(args)
+						return loader(args as LoaderFunctionArgs)
 					},
 				},
 			],

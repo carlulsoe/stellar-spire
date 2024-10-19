@@ -9,7 +9,7 @@ import {
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { type Story, type StoryImage } from '@prisma/client'
-import { type SerializeFrom } from '@remix-run/node'
+import { type SerializeFrom } from '@remix-run/cloudflare'
 import { Form, useActionData } from '@remix-run/react'
 import { useState } from 'react'
 import { z } from 'zod'

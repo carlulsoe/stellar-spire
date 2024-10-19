@@ -5,7 +5,7 @@ import {
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { CommentSchema } from './$chapterId_.index.comments'

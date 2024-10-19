@@ -7,7 +7,7 @@ import {
 	redirect,
 	type ActionFunctionArgs,
 	type MetaFunction,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import { Form, useActionData, useSearchParams } from '@remix-run/react'
 import { HoneypotInputs } from 'remix-utils/honeypot/react'
 import { z } from 'zod'

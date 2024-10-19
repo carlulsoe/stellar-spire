@@ -11,7 +11,7 @@ import {
 	type ActionFunctionArgs,
 	type LoaderFunctionArgs,
 	type MetaFunction,
-} from '@remix-run/node'
+} from '@remix-run/cloudflare'
 import {
 	type Params,
 	Form,

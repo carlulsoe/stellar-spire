@@ -7,7 +7,7 @@ import {
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { type Chapter } from '@prisma/client'
-import { type SerializeFrom } from '@remix-run/node'
+import { type SerializeFrom } from '@remix-run/cloudflare'
 import { Form, useActionData } from '@remix-run/react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
