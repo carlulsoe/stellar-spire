@@ -1,9 +1,11 @@
 import PostHogClient from "../posthog";
+import _ from 'lodash';
 
 export function capturePosthogEvent(request: Request, eventName: string) {
     const cookieString = request.headers.get('Cookie') || '';  
     const projectAPIKey = process.env.POSTHOG_API_KEY;
-    const cookieName = `ph_${projectAPIKey}_posthog`;
+    const safeProjectAPIKey = _.escapeRegExp(projectAPIKey);
+    const cookieName = `ph_${safeProjectAPIKey}_posthog`;
     const cookieMatch = cookieString.match(new RegExp(cookieName + '=([^;]+)'));
     let distinctId;
   
