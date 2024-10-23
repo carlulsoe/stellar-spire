@@ -71,10 +71,6 @@ export async function action({ request }: ActionFunctionArgs) {
 	} = submission.value
 
 	const toxicityResult = await filter.analyzeContent(content)
-	if (!toxicityResult.isAcceptable) {
-		console.log('Toxicity result:', toxicityResult)
-		invariantResponse(false, 'Content is not acceptable', { status: 400 })
-	}
 
 	const updatedChapter = await prisma.chapter.upsert({
 		select: { id: true },

@@ -83,6 +83,7 @@ export function ChapterEditor({
 								...getTextareaProps(fields.content),
 							}}
 							errors={fields.content.errors}
+							className="h-full min-h-[200px] resize-y"
 						/>
 					</div>
 					<ErrorList id={form.errorId} errors={form.errors} />
