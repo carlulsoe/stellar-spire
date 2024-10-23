@@ -12,8 +12,9 @@ export default function PricingPageComponent(props: {
     description: string;
     features: string[];
     cta: string;
-  popular: boolean;
-}[];
+    link: string;
+    popular: boolean;
+  }[];
 }) {
   const [billingPeriod, setBillingPeriod] = useState("yearly")
 /* TODO: Add a loader to check if the user is already subscribed */

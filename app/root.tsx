@@ -221,7 +221,7 @@ function App() {
 						{user ? (
 							<Link to="/premium">
 								<Button variant="default" size="lg">
-									Go Premium
+									Support us
 								</Button>
 							</Link>
 						) : (

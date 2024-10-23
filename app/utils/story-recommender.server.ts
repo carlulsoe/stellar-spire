@@ -12,6 +12,7 @@ async function initializeModel() {
 	embeddingPipeline = await pipeline(
 		'feature-extraction',
 		'Xenova/bge-large-en-v1.5',
+		{ quantized: true },
 	)
 	console.log('BAAI/bge-large-en-v1.5 model loaded')
 }

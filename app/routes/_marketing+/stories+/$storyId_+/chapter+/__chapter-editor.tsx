@@ -53,7 +53,7 @@ export function ChapterEditor({
 	})
 
 	return (
-		<div className="absolute inset-0">
+		<div className="absolute inset-0 pt-12">
 			<FormProvider context={form.context}>
 				<Form
 					method="POST"

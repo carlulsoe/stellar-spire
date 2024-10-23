@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { startEmbeddingModel } from './story-recommender.server'
+import { startToxicityFilter } from './toxicity-filter.server'
 
 const schema = z.object({
 	NODE_ENV: z.enum(['production', 'development', 'test'] as const),
@@ -37,7 +38,8 @@ export function init() {
 
 		throw new Error('Invalid environment variables')
 	}
-	startEmbeddingModel().catch(console.error);
+	startEmbeddingModel().catch(console.error)
+	startToxicityFilter().catch(console.error)
 }
 
 /**

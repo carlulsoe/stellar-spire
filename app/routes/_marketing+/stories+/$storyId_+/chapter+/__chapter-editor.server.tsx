@@ -15,6 +15,7 @@ import {
 	MAX_UPLOAD_SIZE,
 	ChapterEditorSchema,
 } from './__chapter-editor'
+import { filter } from '#app/utils/toxicity-filter.server.js'
 
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -69,6 +70,11 @@ export async function action({ request }: ActionFunctionArgs) {
 		content,
 	} = submission.value
 
+	const toxicityResult = await filter.analyzeContent(content)
+	if (!toxicityResult.isAcceptable) {
+		console.log('Toxicity result:', toxicityResult)
+		return json({ result: toxicityResult }, { status: 400 })
+	}
 
 	const updatedChapter = await prisma.chapter.upsert({
 		select: { id: true },
