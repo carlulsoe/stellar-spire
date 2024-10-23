@@ -86,13 +86,23 @@ export async function action({ request }: ActionFunctionArgs) {
 			number: await prisma.chapter.count({
 				where: { storyId }
 			}) + 1,
+			isAcceptable: toxicityResult.isAcceptable,
 		},
 		update: {
 			title,
 			content,
+			isAcceptable: toxicityResult.isAcceptable,
 		},
 	})
-	
+
+	// if the chapter is not acceptable, set the story to not acceptable
+	if (!toxicityResult.isAcceptable) {
+		await prisma.story.update({
+			where: { id: storyId },
+			data: { isAcceptable: false },
+		})
+	}
+
 	const story = await prisma.story.findUnique({
 		where: { id: storyId },
 	})

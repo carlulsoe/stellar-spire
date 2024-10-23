@@ -79,7 +79,9 @@ export async function getRecommendedStories( // This is already very slow. TODO:
 
 	const userProfile = weightedSum.map((val) => val / weightSum)
 
-	const allStories = await prisma.story.findMany()
+	const allStories = await prisma.story.findMany({
+		where: { isAcceptable: true },
+	})
 
 	const similarities = new Map<string, number>()
 	for (const story of allStories) { // o(total stories)

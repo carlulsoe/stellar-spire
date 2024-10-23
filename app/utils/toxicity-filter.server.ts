@@ -47,12 +47,8 @@ export class ContentFilter {
     }
 
     try {
-      // Ensure text is not too long (model typically has token limits)
-      const truncatedText = text.slice(0, 512); // Adjust limit as needed
-
       // Get raw classification results
-      const results = await this.classifier!(truncatedText);
-
+      const results = await this.classifier!(text, { topk: 6 });
       // Convert results to a more usable format
       const scores: ToxicityScores = {
         toxic: 0,

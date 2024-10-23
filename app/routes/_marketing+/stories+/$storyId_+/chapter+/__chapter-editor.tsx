@@ -21,7 +21,7 @@ import { type action } from './__chapter-editor.server'
 const titleMinLength = 1
 const titleMaxLength = 100
 const contentMinLength = 1
-const contentMaxLength = 10000
+const contentMaxLength = 100000
 
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 3 // 3MB
 
