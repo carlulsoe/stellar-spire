@@ -78,3 +78,33 @@
 		--ring: 217.2 32.6% 60%;
 	}
 }
+
+@layer utilities {
+	.counter-reset-1 {
+	  counter-reset: counter-1;
+	}
+	.counter-reset-2 {
+	  counter-reset: counter-2;
+	}
+	.counter-reset-3 {
+	  counter-reset: counter-3;
+	}
+	.counter-increment-1 {
+	  counter-increment: counter-1;
+	}
+	.counter-increment-2 {
+	  counter-increment: counter-2;
+	}
+	.counter-increment-3 {
+	  counter-increment: counter-3;
+	}
+	.counter-result-1::before {
+	  content: counter(counter-1);
+	}
+	.counter-result-2::before {
+	  content: counter(counter-2);
+	}
+	.counter-result-3::before {
+	  content: counter(counter-3);
+	}
+  }
