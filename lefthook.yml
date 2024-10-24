@@ -5,8 +5,12 @@
 #
 pre-push:
   commands:
-    validate:
-      run: npm run validate
+    test:
+      run: npm run test -- --run
+    lint:
+      run: npm run lint
+    typecheck:
+      run: npm run typecheck
 
 pre-commit:
   parallel: true
