@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import PricingPageComponent from '#app/components/pricing-page'
 import { CONFIG } from '#app/config.js'
 import { requireUserId } from '#app/utils/auth.server.js'

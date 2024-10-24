@@ -1,5 +1,4 @@
 import { Link } from "@remix-run/react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "#app/components/ui/accordion.js"
 import { Button } from "#app/components/ui/button.tsx"
 import { useOptionalUser } from "#app/utils/user.ts"
 

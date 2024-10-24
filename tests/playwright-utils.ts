@@ -68,7 +68,7 @@ export const test = base.extend<{
 	login(options?: GetOrInsertUserOptions): Promise<User>
 	prepareGitHubUser(): Promise<GitHubUser>
 }>({
-	insertNewUser: async ({}, use) => {
+	insertNewUser: async (_, use) => {
 		let userId: string | undefined = undefined
 		await use(async (options) => {
 			const user = await getOrInsertUser(options)
