@@ -16,7 +16,7 @@ export default function PricingPageComponent(props: {
     popular: boolean;
   }[];
 }) {
-  const [billingPeriod, setBillingPeriod] = useState("yearly")
+  const [billingPeriod, setBillingPeriod] = useState("monthly")
 /* TODO: Add a loader to check if the user is already subscribed */
   const tiers = props.tiers
 

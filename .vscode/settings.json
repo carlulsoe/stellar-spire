@@ -13,5 +13,6 @@
 	],
 	"workbench.editorAssociations": {
 		"*.db": "sqlite-viewer.view"
-	}
+	},
+	"oxc.enable": true
 }
