@@ -1,5 +1,4 @@
 import { parseWithZod } from '@conform-to/zod'
-import { createId as cuid } from '@paralleldrive/cuid2'
 import {
 	unstable_createMemoryUploadHandler as createMemoryUploadHandler,
 	json,
@@ -20,12 +19,6 @@ function imageHasFile(
 	image: ImageFieldset,
 ): image is ImageFieldset & { file: NonNullable<ImageFieldset['file']> } {
 	return Boolean(image.file?.size && image.file?.size > 0)
-}
-
-function imageHasId(
-	image: ImageFieldset,
-): image is ImageFieldset & { id: NonNullable<ImageFieldset['id']> } {
-	return image.id != null
 }
 
 export async function action({ request }: ActionFunctionArgs) {

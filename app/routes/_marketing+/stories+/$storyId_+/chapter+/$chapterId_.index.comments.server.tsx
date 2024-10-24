@@ -6,7 +6,6 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from '@remix-run/node'
-import { z } from 'zod'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { CommentSchema } from './$chapterId_.index.comments'
@@ -88,9 +87,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
         ...(parentId ? { parentId } : {}),
       },
     })
-    //console.log("Comment created:", comment)
+    console.log("Comment created:", comment)
 
-    const allComments = await prisma.comment.findMany({ where: { chapterId } })
+    //const allComments = await prisma.comment.findMany({ where: { chapterId } })
     //console.log("All comments after creation:", allComments)
 
     return redirect(`/stories/${params.storyId}/chapter/${chapterId}/`)

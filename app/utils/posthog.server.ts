@@ -7,7 +7,7 @@ export function capturePosthogEvent(request: Request, eventName: string) {
     const cookieMatch = cookieString.match(new RegExp(cookieName + '=([^;]+)'));
     let distinctId;
   
-    if (!!cookieMatch) {
+    if (cookieMatch) {
       const parsedValue = JSON.parse(decodeURIComponent(cookieMatch[1] || ''));
       if (parsedValue && typeof parsedValue === 'object' && 'distinct_id' in parsedValue) {
         distinctId = parsedValue.distinct_id;

@@ -52,12 +52,13 @@ model Story {
   author       User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
   views        Int              @default(0)
   embedding    String?          // SQLite doesn't have a native array type, so we'll serialize this as a JSON array
-
-  @@index([authorId])
-  @@index([views])
+  isAcceptable Boolean          @default(true)
   coverImage   StoryImage?
   UserReadHistory UserReadHistory[]
   Follows Follows[]
+
+  @@index([authorId])
+  @@index([views])
 }
 
 
@@ -73,6 +74,7 @@ model Chapter {
   story      Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
   views      ChapterView[]
   comments   Comment[]
+  isAcceptable Boolean @default(true)
 
   @@index([storyId])
   @@unique([storyId, number])
@@ -121,6 +123,7 @@ model Comment {
   replies   Comment[] @relation("CommentReplies")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  isAcceptable Boolean @default(true)
 
   @@index([authorId])
   @@index([parentId])

@@ -14,6 +14,7 @@ import { GeneralErrorBoundary } from '#app/components/error-boundary.tsx'
 import { CheckboxField, ErrorList, Field } from '#app/components/forms.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
+import { CONFIG } from '#app/config.js'
 import { login, requireAnonymous } from '#app/utils/auth.server.ts'
 import {
 	ProviderConnectionForm,
@@ -23,7 +24,6 @@ import { checkHoneypot } from '#app/utils/honeypot.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
 import { PasswordSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { handleNewSession } from './login.server.ts'
-import { CONFIG } from '#app/config.js'
 
 export const handle: SEOHandle = {
 	getSitemapEntries: () => null,

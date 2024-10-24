@@ -136,6 +136,7 @@ export function TextareaField({
 				aria-describedby={errorId}
 				{...textareaProps}
 				placeholder={placeholder}
+				className="h-full min-h-[200px] resize-y overflow-y-auto"
 			/>
 			<div className="min-h-[32px] px-4 pb-3 pt-1">
 				{errorId ? <ErrorList id={errorId} errors={errors} /> : null}

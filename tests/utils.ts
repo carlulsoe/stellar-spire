@@ -1,7 +1,7 @@
 import * as setCookieParser from 'set-cookie-parser'
+import { CONFIG } from '#app/config.js'
 import { sessionKey } from '#app/utils/auth.server.ts'
 import { authSessionStorage } from '#app/utils/session.server.ts'
-import { CONFIG } from '#app/config.js'
 
 export const BASE_URL = 'https://www.' + CONFIG.DOMAIN
 
