@@ -415,7 +415,7 @@ async function importStories(directoryPath: string, authorUsername: string) {
 						authorId: author.id,
 						chapters: {
 							create: storyData.chapters.map((chapter, index) => ({
-								number: index,
+								number: index + 1,
 								title: chapter.suggested_title.replaceAll('"', ''),
 								content: chapter.content,
 							})),
