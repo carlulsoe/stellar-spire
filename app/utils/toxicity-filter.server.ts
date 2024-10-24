@@ -27,7 +27,7 @@ export class ContentFilter {
   };
 
   constructor() {
-    this.initializeModel();
+    this.initializeModel().catch(console.error)
   }
 
   private async initializeModel() {

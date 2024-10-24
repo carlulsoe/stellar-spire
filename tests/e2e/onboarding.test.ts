@@ -27,7 +27,8 @@ const test = base.extend<{
 		password: string
 	}
 }>({
-	getOnboardingData: async (_, use) => {
+	// eslint-disable-next-line @typescript-eslint/no-empty-pattern
+	getOnboardingData: async ({}, use) => {
 		const userData = createUser()
 		await use(() => {
 			const onboardingData = {

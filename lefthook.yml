@@ -1,0 +1,20 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+#
+pre-push:
+  commands:
+    validate:
+      run: npm run validate
+
+pre-commit:
+  parallel: true
+  commands:
+    oxlint:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: npx oxlint {staged_files}
+    typecheck:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: npm run typecheck
+
