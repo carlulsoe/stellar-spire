@@ -21,7 +21,7 @@ import { type action } from './__chapter-editor.server'
 const titleMinLength = 1
 const titleMaxLength = 100
 const contentMinLength = 1
-const contentMaxLength = 10000
+const contentMaxLength = 100000
 
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 3 // 3MB
 
@@ -53,7 +53,7 @@ export function ChapterEditor({
 	})
 
 	return (
-		<div className="absolute inset-0">
+		<div className="absolute inset-0 pt-12">
 			<FormProvider context={form.context}>
 				<Form
 					method="POST"
@@ -83,6 +83,7 @@ export function ChapterEditor({
 								...getTextareaProps(fields.content),
 							}}
 							errors={fields.content.errors}
+							className="h-full min-h-[200px] resize-y"
 						/>
 					</div>
 					<ErrorList id={form.errorId} errors={form.errors} />

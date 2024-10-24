@@ -1,0 +1,10 @@
+{
+	"categories": {
+		"correctness": "error",
+		"perf": "error",
+		"suspicious": "error"
+	},
+	"rules": {
+		"eslint/no-empty-pattern": "allow"
+	}
+}

@@ -1,7 +1,7 @@
-import { CONFIG } from '#app/config.js'
 import { renderAsync } from '@react-email/components'
 import { type ReactElement } from 'react'
 import { z } from 'zod'
+import { CONFIG } from '#app/config.js'
 
 const resendErrorSchema = z.union([
 	z.object({
