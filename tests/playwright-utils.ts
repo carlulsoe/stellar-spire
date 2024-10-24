@@ -68,7 +68,6 @@ export const test = base.extend<{
 	login(options?: GetOrInsertUserOptions): Promise<User>
 	prepareGitHubUser(): Promise<GitHubUser>
 }>({
-	// eslint-disable-next-line @typescript-eslint/no-empty-pattern
 	insertNewUser: async ({}, use) => {
 		let userId: string | undefined = undefined
 		await use(async (options) => {

@@ -29,7 +29,8 @@
     "test:e2e:install": "npx playwright install --with-deps chromium",
     "typecheck": "tsc",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "oxlint": "npx oxlint -c .oxlintrc.json --import-plugin -W correctness -W suspicious -W perf"
   },
   "prettier": "@epic-web/config/prettier",
   "eslintIgnore": [

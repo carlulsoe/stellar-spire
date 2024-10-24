@@ -8,7 +8,8 @@ pre-push:
     test:
       run: npm run test -- --run
     lint:
-      run: npm run lint
+      glob: "*.{js,ts,jsx,tsx}"
+      run: npm run lint {staged_files}
     typecheck:
       run: npm run typecheck
 
@@ -17,7 +18,7 @@ pre-commit:
   commands:
     oxlint:
       glob: "*.{js,ts,jsx,tsx}"
-      run: npx oxlint {staged_files}
+      run: npx oxlint -c .oxlintrc.json --import-plugin {staged_files}
     typecheck:
       glob: "*.{js,ts,jsx,tsx}"
       run: npm run typecheck
