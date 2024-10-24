@@ -52,7 +52,6 @@ import { type Theme, getTheme } from './utils/theme.server.ts'
 import { makeTimings, time } from './utils/timing.server.ts'
 import { getToast } from './utils/toast.server.ts'
 import { useOptionalUser, useUser } from './utils/user.ts'
-import PremiumPage from './routes/_marketing+/premium+/index.tsx';
 
 export const links: LinksFunction = () => {
 	return [
@@ -221,7 +220,7 @@ function App() {
 						{user ? (
 							<Link to="/premium">
 								<Button variant="default" size="lg">
-									Go Premium
+									Support us
 								</Button>
 							</Link>
 						) : (

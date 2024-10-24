@@ -23,6 +23,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			content: true,
 			updatedAt: true,
 			number: true,
+			isAcceptable: true,
 			story: {
 				select: {
 					author: {
@@ -38,13 +39,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 	// If chapter is not found, throw a 404 error
 	invariantResponse(chapter, 'Chapter not found', { status: 404 })
-
-
+	// if the chapter is not acceptable, throw a 404 error
+	invariantResponse(chapter.isAcceptable === false, 'Chapter not found', { status: 404 })
 
 	const userId = await getUserId(request)
 	if (userId) {
 		await recordUserRead(userId, storyId)
-
 	}
 
 	let isFollowed = null

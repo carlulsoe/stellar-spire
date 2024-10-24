@@ -1,28 +1,20 @@
 import {
-	FormProvider,
-	getFieldsetProps,
 	getFormProps,
 	getInputProps,
-	getTextareaProps,
 	useForm,
-	type FieldMetadata,
 } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { type SerializeFrom } from '@remix-run/node'
-import { invariantResponse } from '@epic-web/invariant'
 import { useLoaderData, Form, useActionData, useNavigation } from "@remix-run/react"
 import { ChevronUp, ChevronDown, MessageSquare } from 'lucide-react'
 import { useState } from 'react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from "#app/components/error-boundary.js"
+import { ErrorList, Field } from '#app/components/forms.js'
 import { Avatar, AvatarFallback, AvatarImage } from "#app/components/ui/avatar"
 import { Button } from "#app/components/ui/button"
-import { Textarea } from "#app/components/ui/textarea"
-import { type action, type loader } from './$chapterId_.index.comments.server'
-import { TextareaProps } from '../../../../../components/ui/textarea';
-import { ErrorList, Field, TextareaField } from '#app/components/forms.js'
 import { StatusButton } from '#app/components/ui/status-button.js'
 import { useIsPending } from '#app/utils/misc.js'
+import { type action, type loader } from './$chapterId_.index.comments.server'
 
 type Comment = {
   id: string
@@ -88,7 +80,7 @@ function CommentComponent({ comment, depth = 0 }: { comment: Comment; depth?: nu
 function CommentForm({ parentId }: { parentId?: string }) {
   const actionData = useActionData<typeof action>()
   const isPending = useIsPending()
-
+  console.log(parentId)
   const [form, fields] = useForm({
     id: 'comment-form',
     constraint: getZodConstraint(CommentSchema),
@@ -151,7 +143,7 @@ export function ErrorBoundary() {
   return (
     <GeneralErrorBoundary
       statusHandlers={{
-        404: ({}) => (
+        404: () => (
           <p>No comments found for this chapter</p>
         ),
         400: ({ error }) => (

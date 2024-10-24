@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { updateStoryEmbedding } from '#app/utils/story-recommender.server.ts'
+import { filter } from '#app/utils/toxicity-filter.server.js'
 import {
 	MAX_UPLOAD_SIZE,
 	ChapterEditorSchema,
@@ -69,6 +70,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		content,
 	} = submission.value
 
+	const toxicityResult = await filter.analyzeContent(content)
 
 	const updatedChapter = await prisma.chapter.upsert({
 		select: { id: true },
@@ -80,13 +82,23 @@ export async function action({ request }: ActionFunctionArgs) {
 			number: await prisma.chapter.count({
 				where: { storyId }
 			}) + 1,
+			isAcceptable: toxicityResult.isAcceptable,
 		},
 		update: {
 			title,
 			content,
+			isAcceptable: toxicityResult.isAcceptable,
 		},
 	})
-	
+
+	// if the chapter is not acceptable, set the story to not acceptable
+	if (!toxicityResult.isAcceptable) {
+		await prisma.story.update({
+			where: { id: storyId },
+			data: { isAcceptable: false },
+		})
+	}
+
 	const story = await prisma.story.findUnique({
 		where: { id: storyId },
 	})

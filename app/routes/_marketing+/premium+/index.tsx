@@ -1,7 +1,7 @@
-import { ActionFunctionArgs, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
 import PricingPageComponent from '#app/components/pricing-page'
-import { requireUserId } from '#app/utils/auth.server.js'
 import { CONFIG } from '#app/config.js'
+import { requireUserId } from '#app/utils/auth.server.js'
 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -15,42 +15,44 @@ export default function PremiumPage() {
 	const tiers = [
 		{
 		  name: "Supporter",
-		  monthlyPrice: 4.99,
-		  yearlyPrice: (4.99*6),
+		  monthlyPrice: 9.99,
+		  yearlyPrice: (9.99*10),
 		  description: "For those who want to support the " + CONFIG.SITENAME + " community",
 		  features: [
 			"Supporting the " + CONFIG.SITENAME + " community",
+			"Helps keep the lights on and ads free",
+			"A badge on your profile",
 		  ],
 		  cta: "Support the Community",
-		  popular: false,
-		},
-		{
-		  name: "Author",
-		  monthlyPrice: 14.99,
-		  yearlyPrice: (14.99*10),
-		  description: "Ideal for serious writers aiming for publication",
-		  features: [
-			"Advanced AI-powered editing suggestions",
-			"Character development tools",
-			"Plot structure analyzer",
-			"Beta reader management system",
-		  ],
-		  cta: "Elevate Your Craft",
+		  link: "/premium",
 		  popular: true,
 		},
 		{
-		  name: "Pro",
+		  name: "Super Supporter",
 		  monthlyPrice: 49.99,
 		  yearlyPrice: (49.99*10),
-		  description: "For established authors and writing professionals",
+		  description: "For the Super Supporters who can go beyond their limits",
 		  features: [
-			"Everything in Author",
-			"Collaboration tools for co-authors",
-			"Marketing and book promotion tools",
-			"Royalty tracking and analytics",
-			"Priority support from writing experts",
+			"Supporting the " + CONFIG.SITENAME + " community",
+			"Helps keep the lights on and ads free",
+			"An even cooler badge on your profile",
 		  ],
-		  cta: "Unlock Your Potential",
+		  cta: "Power Up",
+		  link: "/premium",
+		  popular: false,
+		},
+		{
+		  name: "Legendary Super Supporter",
+		  monthlyPrice: 99.99,
+		  yearlyPrice: (99.99*10),
+		  description: "For the rare Legendary Super Supporters that is fully powered up and can go beyond their limits",
+		  features: [
+			"Supporting the " + CONFIG.SITENAME + " community",
+			"Helps keep the lights on and ads free",
+			"The coolest badge on your profile",
+		  ],
+		  cta: "Go Further Beyond",
+		  link: "/premium",
 		  popular: false,
 		},
 	  ]

@@ -22,6 +22,7 @@ import { StoryOverviewComponent } from '#app/components/story-overview.js'
 import { Button } from '#app/components/ui/button.tsx'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
+import { CONFIG } from '#app/config.js'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { useIsPending } from '#app/utils/misc.tsx'
@@ -30,7 +31,6 @@ import { ReadingTimeEstimator } from '#app/utils/readingTimeEstimate.js'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { userHasPermission, useOptionalUser } from '#app/utils/user.ts'
 import { type loader as storiesLoader } from '../../../users+/$username_+/stories.tsx'
-import { CONFIG } from '#app/config.js'
 
 export async function loader({ params }: LoaderFunctionArgs) {
 	const story = await prisma.story.findUnique({
