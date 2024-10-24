@@ -1,8 +1,8 @@
-import { LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { invariantResponse } from '@epic-web/invariant'
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
+import { CONFIG } from '#app/config.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'
-import { invariantResponse } from '@epic-web/invariant'
-import { CONFIG } from '#app/config.js'
 
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

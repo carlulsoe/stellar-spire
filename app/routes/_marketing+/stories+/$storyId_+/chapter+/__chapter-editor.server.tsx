@@ -11,11 +11,11 @@ import { z } from 'zod'
 import { requireUserId } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { updateStoryEmbedding } from '#app/utils/story-recommender.server.ts'
+import { filter } from '#app/utils/toxicity-filter.server.js'
 import {
 	MAX_UPLOAD_SIZE,
 	ChapterEditorSchema,
 } from './__chapter-editor'
-import { filter } from '#app/utils/toxicity-filter.server.js'
 
 
 export async function action({ request }: ActionFunctionArgs) {

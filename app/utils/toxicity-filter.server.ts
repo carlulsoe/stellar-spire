@@ -1,4 +1,4 @@
-import { pipeline, TextClassificationPipeline } from '@xenova/transformers';
+import { pipeline, type TextClassificationPipeline } from '@xenova/transformers';
 
 interface ToxicityScores {
   toxic: number;

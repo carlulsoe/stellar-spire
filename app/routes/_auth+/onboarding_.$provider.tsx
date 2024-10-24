@@ -24,6 +24,7 @@ import { z } from 'zod'
 import { CheckboxField, ErrorList, Field } from '#app/components/forms.tsx'
 import { Spacer } from '#app/components/spacer.tsx'
 import { StatusButton } from '#app/components/ui/status-button.tsx'
+import { CONFIG } from '#app/config.js'
 import {
 	authenticator,
 	sessionKey,
@@ -39,7 +40,6 @@ import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { NameSchema, UsernameSchema } from '#app/utils/user-validation.ts'
 import { verifySessionStorage } from '#app/utils/verification.server.ts'
 import { onboardingEmailSessionKey } from './onboarding'
-import { CONFIG } from '#app/config.js'
 
 export const providerIdKey = 'providerId'
 export const prefilledProfileKey = 'prefilledProfile'

@@ -2,8 +2,10 @@
  * @vitest-environment jsdom
  */
 import { faker } from '@faker-js/faker'
+import { PrismaClient } from '@prisma/client'
+import { DefaultArgs } from '@prisma/client/runtime/library'
 import { createRemixStub } from '@remix-run/testing'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor , fireEvent } from '@testing-library/react'
 import setCookieParser from 'set-cookie-parser'
 import { expect, test, vi } from 'vitest'
 import { loader as rootLoader } from '#app/root.tsx'
@@ -11,12 +13,10 @@ import { getSessionExpirationDate, sessionKey } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { authSessionStorage } from '#app/utils/session.server.ts'
 import { createUser, getUserImages, createComment, createStory } from '#tests/db-utils.ts'
+import { loader , action } from './$chapterId_.index.comments.server.tsx'
+
 import { default as CommentsRoute } from './$chapterId_.index.comments.tsx'
-import { loader } from './$chapterId_.index.comments.server.tsx'
-import { action } from './$chapterId_.index.comments.server.tsx'
-import { fireEvent } from '@testing-library/react'
-import { PrismaClient } from '@prisma/client'
-import { DefaultArgs } from '@prisma/client/runtime/library'
+
 
 
 test('Renders comments correctly', async () => {

@@ -1,9 +1,9 @@
+import { Link } from "@remix-run/react"
 import { Check } from "lucide-react"
+import { type SetStateAction, useState } from "react"
 import { Button } from "#app/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "#app/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#app/components/ui/tabs"
-import { SetStateAction, useState } from "react"
-import { Link } from "@remix-run/react"
 export default function PricingPageComponent(props: {
   tiers: {
     name: string;
