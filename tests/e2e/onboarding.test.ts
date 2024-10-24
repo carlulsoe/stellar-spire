@@ -1,5 +1,6 @@
 import { invariant } from '@epic-web/invariant'
 import { faker } from '@faker-js/faker'
+import { CONFIG } from '#app/config.js'
 import { prisma } from '#app/utils/db.server.ts'
 import {
 	normalizeEmail,
@@ -11,7 +12,6 @@ import {
 } from '#app/utils/user-validation'
 import { readEmail } from '#tests/mocks/utils.ts'
 import { createUser, expect, test as base } from '#tests/playwright-utils.ts'
-import { CONFIG } from '#app/config.js'
 
 const URL_REGEX = /(?<url>https?:\/\/[^\s$.?#].[^\s]*)/
 const CODE_REGEX = /Here's your verification code: (?<code>[\d\w]+)/
