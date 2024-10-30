@@ -15,6 +15,5 @@ pre-commit:
       glob: "*.{js,ts,jsx,tsx}"
       run: npx oxlint -c .oxlintrc.json --import-plugin {staged_files}
     typecheck:
-      glob: "*.{js,ts,jsx,tsx}"
       run: npm run typecheck
 
