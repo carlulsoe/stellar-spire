@@ -6,6 +6,7 @@ import {
 	type HandleDocumentRequestFunction,
 } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
+import React from 'react'
 import * as Sentry from '@sentry/remix'
 import chalk from 'chalk'
 import { isbot } from 'isbot'
