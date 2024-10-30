@@ -13,6 +13,7 @@ import { createUser, createComment, createStory } from '#tests/db-utils.ts'
 import { loader , action } from './$chapterId_.index.comments.server.tsx'
 
 import { default as CommentsRoute } from './$chapterId_.index.comments.tsx'
+import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 
 
 
@@ -77,7 +78,7 @@ test('Submits a new comment', async () => {
 		{
 			id: 'root',
 			path: '/',
-			loader: async (args) => {
+			loader: async (args: LoaderFunctionArgs) => {
 				// add the cookie header to the request
 				args.request.headers.set('cookie', cookieHeader)
 				return rootLoader(args)
@@ -86,12 +87,12 @@ test('Submits a new comment', async () => {
 				{
 					path: '/stories/:storyId/chapter/:chapterId/',
 					Component: CommentsRoute,
-					loader: async (args) => {
+					loader: async (args: LoaderFunctionArgs) => {
 						// add the cookie header to the request
 						args.request.headers.set('cookie', cookieHeader)
 						return loader(args)
 					},
-					action: async (args) => {
+					action: async (args: ActionFunctionArgs) => {
 						// add the cookie header to the request
 						args.request.headers.set('cookie', cookieHeader)
 						args.request.headers.set('Content-Type', 'application/x-www-form-urlencoded')
