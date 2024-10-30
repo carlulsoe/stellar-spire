@@ -1,5 +1,6 @@
 import { invariantResponse } from '@epic-web/invariant'
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare'
+import React from 'react'
 import { CONFIG } from '#app/config.js'
 import { requireUserId } from '#app/utils/auth.server.js'
 import { prisma } from '#app/utils/db.server.js'

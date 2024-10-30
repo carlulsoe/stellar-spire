@@ -6,8 +6,7 @@ import { isbot } from 'isbot'
 import { renderToReadableStream } from "react-dom/server";
 import { getEnv, init } from './utils/env.server.ts'
 import { NonceProvider } from './utils/nonce-provider.ts'
-import { makeTimings } from './utils/timing.server.ts'
-
+import React from 'react'
 const ABORT_DELAY = 5000
 
 init()

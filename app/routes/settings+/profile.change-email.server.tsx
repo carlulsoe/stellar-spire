@@ -1,6 +1,7 @@
 import { invariant } from '@epic-web/invariant'
 import * as E from '@react-email/components'
 import { json } from '@remix-run/cloudflare'
+import React from 'react'
 import { CONFIG } from '#app/config.js'
 import {
 	requireRecentVerification,

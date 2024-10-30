@@ -1,5 +1,6 @@
 import { type LoaderFunctionArgs } from '@remix-run/cloudflare'
 import { json, Link, redirect, useLoaderData, type MetaFunction } from '@remix-run/react'
+import React from 'react'
 import { z } from 'zod'
 import { GeneralErrorBoundary } from '#app/components/error-boundary.js'
 import { ErrorList } from '#app/components/forms.js'
